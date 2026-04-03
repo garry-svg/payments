@@ -1,268 +1,254 @@
 <template>
-  <div class="max-w-6xl mx-auto px-6 py-16 space-y-16">
-    <header class="border-b border-white/5 pb-8 mb-12">
-      <h1 class="text-4xl font-bold tracking-tight text-slate-100 mb-4">System Utilities</h1>
-      <p class="text-slate-400 max-w-2xl text-lg">
-        Professional-grade tools for formatting, encoding, and debugging payment payloads. Designed for high-contrast visibility and speed.
-      </p>
-    </header>
+  <div class="max-w-7xl mx-auto px-6 py-12 lg:py-20 min-h-screen bg-white">
+    <div class="flex flex-col lg:flex-row gap-12">
+      <!-- Sidebar / Menu -->
+      <aside class="w-full lg:w-64 flex flex-col gap-2">
+        <div class="mb-8 hidden lg:block px-4">
+          <h1 class="text-xl font-bold text-slate-900 tracking-tight">System_Utilities</h1>
+          <p class="text-xs text-slate-400 font-mono mt-1 uppercase tracking-widest">v4.1.0_PRO</p>
+        </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-      <!-- XML Pretty Print -->
-      <div :class="['glass rounded-3xl p-8 flex flex-col gap-6 transition-all duration-500', { 'animate-pulse border-indigo-500/50 shadow-[0_0_30px_rgba(79,70,229,0.2)]': xmlLoading }]">
-        <div class="flex items-center justify-between">
-          <h2 class="text-xl font-bold text-slate-100 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+        <!-- Mobile Horizontal Tabs / Desktop Vertical Sidebar -->
+        <div class="flex lg:flex-col overflow-x-auto lg:overflow-visible no-scrollbar border-b lg:border-none border-slate-100 pb-2 lg:pb-0 gap-1 lg:gap-2">
+          <button 
+            v-for="tool in tools" 
+            :key="tool.id"
+            @click="activeToolId = tool.id"
+            :class="[
+              'flex items-center gap-3 px-4 py-3 rounded-xl transition-all whitespace-nowrap lg:whitespace-normal group',
+              activeToolId === tool.id 
+                ? 'bg-violet-50 text-indigo-600 border border-indigo-200' 
+                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+            ]"
+          >
+            <span :class="['w-8 h-8 rounded-lg flex items-center justify-center font-mono text-sm transition-colors', activeToolId === tool.id ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400 group-hover:bg-slate-200 group-hover:text-slate-600']">
+              {{ tool.icon }}
             </span>
-            XML Formatter
-          </h2>
+            <span class="font-bold text-sm tracking-tight">{{ tool.name }}</span>
+          </button>
         </div>
-        
-        <div class="space-y-2">
-          <textarea
-            v-model="xmlInput"
-            rows="6"
-            placeholder="Paste raw XML here..."
-            class="w-full bg-black/20 border border-white/10 rounded-xl p-4 font-mono text-sm text-slate-300 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-y"
-          ></textarea>
-          <div v-if="xmlError" class="text-red-400 text-sm flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            {{ xmlError }}
-          </div>
-        </div>
+      </aside>
 
-        <button
-          @click="formatXml"
-          :disabled="xmlLoading || !xmlInput.trim()"
-          class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-xl shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transition-all w-full flex justify-center"
-        >
-          {{ xmlLoading ? 'Processing...' : 'Format XML' }}
-        </button>
-
-        <div v-if="xmlOutput" class="relative group mt-4">
-          <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button @click="copyToClipboard(xmlOutput, 'xml')" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 transition-colors" title="Copy to Clipboard">
-              <svg v-if="copied === 'xml'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-          </div>
-          <pre class="bg-black/50 border border-white/5 p-4 rounded-xl overflow-x-auto text-slate-300 font-mono text-sm h-64 overflow-y-auto custom-scrollbar">{{ xmlOutput }}</pre>
-        </div>
-      </div>
-
-      <!-- JSON Pretty Print -->
-      <div :class="['glass rounded-3xl p-8 flex flex-col gap-6 transition-all duration-500', { 'animate-pulse border-indigo-500/50 shadow-[0_0_30px_rgba(79,70,229,0.2)]': jsonLoading }]">
-        <div class="flex items-center justify-between">
-          <h2 class="text-xl font-bold text-slate-100 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-            </span>
-            JSON Formatter
-          </h2>
-        </div>
-        
-        <div class="space-y-2">
-          <textarea
-            v-model="jsonInput"
-            rows="6"
-            placeholder='{"paste": "raw JSON here"}'
-            class="w-full bg-black/20 border border-white/10 rounded-xl p-4 font-mono text-sm text-slate-300 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-y"
-          ></textarea>
-          <div v-if="jsonError" class="text-red-400 text-sm flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            {{ jsonError }}
-          </div>
-        </div>
-
-        <button
-          @click="formatJson"
-          :disabled="jsonLoading || !jsonInput.trim()"
-          class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-xl shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transition-all w-full flex justify-center"
-        >
-          {{ jsonLoading ? 'Processing...' : 'Format JSON' }}
-        </button>
-
-        <div v-if="jsonOutput" class="relative group mt-4">
-          <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-            <button @click="copyToClipboard(jsonOutput, 'json')" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 transition-colors" title="Copy to Clipboard">
-              <svg v-if="copied === 'json'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-          </div>
-          <pre class="bg-black/50 border border-white/5 p-4 rounded-xl overflow-x-auto text-slate-300 font-mono text-sm h-64 overflow-y-auto custom-scrollbar">{{ jsonOutput }}</pre>
-        </div>
-      </div>
-
-      <!-- Base64 Converter -->
-      <div :class="['glass rounded-3xl p-8 flex flex-col gap-6 lg:col-span-2 transition-all duration-500', { 'animate-pulse border-indigo-500/50 shadow-[0_0_30px_rgba(79,70,229,0.2)]': b64Loading }]">
-        <div class="flex items-center justify-between">
-          <h2 class="text-xl font-bold text-slate-100 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3L21 7L17 11"></path><path d="M3 13L7 17L3 21"></path><path d="M21 7H7.5A5.5 5.5 0 0 0 2 12.5V12.5"></path><path d="M3 17H16.5A5.5 5.5 0 0 0 22 11.5V11.5"></path></svg>
-            </span>
-            Base64 Converter
-          </h2>
+      <!-- Workspace Area -->
+      <main class="flex-grow">
+        <div class="bg-white border border-slate-100 rounded-[2rem] shadow-xl shadow-slate-100/50 p-8 md:p-12 min-h-[600px] flex flex-col">
           
-          <div class="flex bg-black/30 rounded-lg p-1 border border-white/5">
-            <button 
-              @click="b64Mode = 'encode'" 
-              :class="['px-4 py-1.5 text-sm font-medium rounded-md transition-all', b64Mode === 'encode' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200']"
-            >
-              Encode
-            </button>
-            <button 
-              @click="b64Mode = 'decode'" 
-              :class="['px-4 py-1.5 text-sm font-medium rounded-md transition-all', b64Mode === 'decode' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200']"
-            >
-              Decode
-            </button>
-          </div>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="space-y-2">
-            <label class="block text-xs font-mono text-slate-500 uppercase tracking-widest ml-1">
-              Input {{ b64Mode === 'encode' ? 'Text' : 'Base64' }}
-            </label>
-            <textarea
-              v-model="b64Input"
-              rows="8"
-              :placeholder="b64Mode === 'encode' ? 'Enter raw text to encode...' : 'Enter base64 string to decode...'"
-              class="w-full h-48 bg-black/20 border border-white/10 rounded-xl p-4 font-mono text-sm text-slate-300 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-none"
-            ></textarea>
-            <div v-if="b64Error" class="text-red-400 text-sm flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-              {{ b64Error }}
-            </div>
+          <!-- Active Tool Content -->
+          <div v-if="activeTool" class="flex flex-col h-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             
-            <button
-              @click="convertBase64"
-              :disabled="b64Loading || !b64Input.trim()"
-              class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-xl shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transition-all w-full flex justify-center mt-4"
-            >
-              {{ b64Loading ? 'Processing...' : (b64Mode === 'encode' ? 'Encode to Base64' : 'Decode from Base64') }}
-            </button>
-          </div>
-
-          <div class="space-y-2 flex flex-col">
-            <label class="block text-xs font-mono text-slate-500 uppercase tracking-widest ml-1">Result</label>
-            <div class="relative group flex-grow">
-              <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                <button @click="copyToClipboard(b64Output, 'b64')" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 transition-colors" title="Copy to Clipboard">
-                  <svg v-if="copied === 'b64'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-50 pb-8">
+              <div>
+                <h2 class="text-3xl font-bold text-slate-900 tracking-tight mb-2">{{ activeTool.name }}</h2>
+                <p class="text-slate-500 max-w-xl leading-relaxed">{{ activeTool.description }}</p>
+              </div>
+              <div class="flex gap-3">
+                <button 
+                  @click="clearCurrentTool"
+                  class="px-6 py-2.5 text-sm font-bold text-slate-400 hover:text-slate-900 border border-slate-200 rounded-xl transition-all"
+                >
+                  Clear_Buffer
+                </button>
+                <button 
+                  @click="processToolAction"
+                  :disabled="isLoading || !activeInput.trim()"
+                  class="px-8 py-2.5 bg-indigo-950 text-white font-bold rounded-xl transition-all hover:bg-indigo-900 disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-lg shadow-indigo-100"
+                >
+                  {{ isLoading ? 'Processing...' : activeTool.actionLabel }}
                 </button>
               </div>
-              <pre class="w-full h-full min-h-[12rem] bg-black/50 border border-white/5 rounded-xl p-4 overflow-auto text-slate-300 font-mono text-sm custom-scrollbar whitespace-pre-wrap break-all">{{ b64Output || 'Output will appear here...' }}</pre>
+            </header>
+
+            <!-- Input Section -->
+            <div class="flex flex-col gap-3">
+              <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Input_Data</label>
+              <div class="relative group">
+                <textarea
+                  v-model="activeInput"
+                  rows="10"
+                  :placeholder="activeTool.placeholder"
+                  class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-6 font-mono text-sm text-slate-700 focus:outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 transition-all resize-y custom-scrollbar"
+                ></textarea>
+              </div>
+              <div v-if="currentError" class="text-red-500 text-xs font-bold flex items-center gap-2 mt-1 ml-1 bg-red-50 p-3 rounded-lg border border-red-100">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                {{ currentError }}
+              </div>
             </div>
+
+            <!-- Output Section -->
+            <div v-if="activeOutput" class="flex flex-col gap-3">
+              <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Processed_Result</label>
+              <div class="relative group">
+                <div class="absolute top-4 right-4 z-10">
+                  <button 
+                    @click="copyOutput"
+                    class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 text-white rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-xl"
+                  >
+                    <template v-if="isCopied">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      Copied_Ok
+                    </template>
+                    <template v-else>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                      Copy_Result
+                    </template>
+                  </button>
+                </div>
+                <pre class="w-full h-80 bg-slate-900 border border-slate-900 rounded-2xl p-6 overflow-auto text-indigo-100 font-mono text-sm leading-relaxed custom-scrollbar whitespace-pre-wrap break-all shadow-inner shadow-black/20">{{ activeOutput }}</pre>
+              </div>
+            </div>
+
+            <!-- Empty Output Placeholder -->
+            <div v-else class="flex-grow flex flex-col items-center justify-center border-2 border-dashed border-slate-50 rounded-2xl min-h-[200px] text-slate-300">
+              <div class="font-mono text-[10px] uppercase tracking-[0.2em]">Ready_To_Process...</div>
+            </div>
+
           </div>
         </div>
-      </div>
+      </main>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 
-const copied = ref<string | null>(null)
-
-function copyToClipboard(text: string, id: string) {
-  if (!text) return
-  navigator.clipboard.writeText(text)
-  copied.value = id
-  setTimeout(() => { copied.value = null }, 2000)
-}
-
-// XML Tool
-const xmlInput = ref('')
-const xmlOutput = ref('')
-const xmlLoading = ref(false)
-const xmlError = ref<string | null>(null)
-
-async function formatXml() {
-  if (!xmlInput.value.trim()) return
-  xmlLoading.value = true
-  xmlError.value = null
-  try {
-    const data = await $fetch<string>(`${apiBase}/api/format/xml`, {
-      method: 'POST',
-      body: xmlInput.value,
-      headers: { 'Content-Type': 'application/xml' }
-    })
-    xmlOutput.value = data
-  } catch (err: any) {
-    xmlError.value = err.data?.message || err.message || 'Failed to format XML. Please check the syntax.'
-  } finally {
-    xmlLoading.value = false
+// Tool Definitions
+const tools = [
+  { 
+    id: 'xml-fmt', 
+    name: 'XML Formatter', 
+    icon: '< >', 
+    actionLabel: 'Format XML',
+    placeholder: 'Paste raw XML string here...',
+    description: 'Beautifies and validates XML structures. Ideal for debugging SOAP messages or complex payload definitions.'
+  },
+  { 
+    id: 'json-fmt', 
+    name: 'JSON Formatter', 
+    icon: '{ }', 
+    actionLabel: 'Format JSON',
+    placeholder: 'Paste raw JSON string here...',
+    description: 'Pretty prints minified JSON data with high-contrast formatting for structural analysis.'
+  },
+  { 
+    id: 'b64-enc', 
+    name: 'Base64 Encoder', 
+    icon: '↔', 
+    actionLabel: 'Encode Text',
+    placeholder: 'Enter UTF-8 text to encode to base64...',
+    description: 'Safe conversion of plain text data into standardized Base64 strings for transmission.'
+  },
+  { 
+    id: 'b64-dec', 
+    name: 'Base64 Decoder', 
+    icon: '→ ←', 
+    actionLabel: 'Decode string',
+    placeholder: 'Enter base64 encoded string...',
+    description: 'Translates Base64 encoded strings back into human-readable UTF-8 text.'
   }
+]
+
+// State Management
+const activeToolId = ref('xml-fmt')
+const activeTool = computed(() => tools.find(t => t.id === activeToolId.value))
+
+const activeInput = ref('')
+const activeOutput = ref('')
+const currentError = ref<string | null>(null)
+const isLoading = ref(false)
+const isCopied = ref(false)
+
+// Reset state when switching tools
+watch(activeToolId, () => {
+  activeInput.value = ''
+  activeOutput.value = ''
+  currentError.value = null
+})
+
+function clearCurrentTool() {
+  activeInput.value = ''
+  activeOutput.value = ''
+  currentError.value = null
 }
 
-// JSON Tool
-const jsonInput = ref('')
-const jsonOutput = ref('')
-const jsonLoading = ref(false)
-const jsonError = ref<string | null>(null)
-
-async function formatJson() {
-  if (!jsonInput.value.trim()) return
-  jsonLoading.value = true
-  jsonError.value = null
-  try {
-    const data = await $fetch<any>(`${apiBase}/api/format/json`, {
-      method: 'POST',
-      body: jsonInput.value,
-      headers: { 'Content-Type': 'application/json' }
-    })
-    jsonOutput.value = typeof data === 'string' ? data : JSON.stringify(data, null, 2)
-  } catch (err: any) {
-    jsonError.value = err.data?.message || err.message || 'Failed to format JSON. Please check the syntax.'
-  } finally {
-    jsonLoading.value = false
-  }
+async function copyOutput() {
+  if (!activeOutput.value) return
+  await navigator.clipboard.writeText(activeOutput.value)
+  isCopied.value = true
+  setTimeout(() => { isCopied.value = false }, 2000)
 }
 
-// Base64 Tool
-const b64Input = ref('')
-const b64Output = ref('')
-const b64Mode = ref<'encode' | 'decode'>('encode')
-const b64Loading = ref(false)
-const b64Error = ref<string | null>(null)
-
-async function convertBase64() {
-  if (!b64Input.value.trim()) return
-  b64Loading.value = true
-  b64Error.value = null
+// Unified Action Handler
+async function processToolAction() {
+  if (!activeInput.value.trim()) return
+  
+  isLoading.value = true
+  currentError.value = null
+  
   try {
-    const data = await $fetch<{ result: string }>(`${apiBase}/api/convert/base64`, {
-      method: 'POST',
-      body: { data: b64Input.value, mode: b64Mode.value }
-    })
-    b64Output.value = data.result
+    if (activeToolId.value === 'xml-fmt') {
+      const data = await $fetch<string>(`${apiBase}/api/format/xml`, {
+        method: 'POST',
+        body: activeInput.value,
+        headers: { 'Content-Type': 'application/xml' }
+      })
+      activeOutput.value = data
+    } 
+    else if (activeToolId.value === 'json-fmt') {
+      const data = await $fetch<any>(`${apiBase}/api/format/json`, {
+        method: 'POST',
+        body: activeInput.value,
+        headers: { 'Content-Type': 'application/json' }
+      })
+      activeOutput.value = typeof data === 'string' ? data : JSON.stringify(data, null, 2)
+    }
+    else if (activeToolId.value === 'b64-enc' || activeToolId.value === 'b64-dec') {
+      const mode = activeToolId.value === 'b64-enc' ? 'encode' : 'decode'
+      const data = await $fetch<{ result: string }>(`${apiBase}/api/convert/base64`, {
+        method: 'POST',
+        body: { data: activeInput.value, mode }
+      })
+      activeOutput.value = data.result
+    }
   } catch (err: any) {
-    b64Error.value = err.data?.message || err.message || `Failed to ${b64Mode.value}.`
+    currentError.value = err.data?.message || err.message || 'Processing failed. Please check your input format.'
   } finally {
-    b64Loading.value = false
+    isLoading.value = false
   }
 }
 </script>
 
 <style scoped>
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  @apply bg-black/20 rounded-xl;
+  @apply bg-slate-50;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-slate-700/50 rounded-full;
+  @apply bg-slate-200 rounded-full;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  @apply bg-slate-600/50;
+  @apply bg-slate-300;
+}
+
+pre.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-slate-900;
+}
+pre.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-slate-700 rounded-full;
 }
 </style>

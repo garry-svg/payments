@@ -37,12 +37,12 @@
             davegarry.com
           </div>
           <p class="text-slate-500 text-sm max-w-xs text-center md:text-left">
-            Infrastructure for the Modern Era. Financial messaging, architecture, and technology.
+            Financial Messaging and Technologies. Architecture and systems powering modern fintech.
           </p>
         </div>
         
         <div class="flex gap-8">
-          <a v-for="social in socials" :key="social.name" :href="social.url" class="text-slate-400 hover:text-indigo-600 transition-colors text-sm font-medium">
+          <a v-for="social in socials" :key="social.name" :href="social.url" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-indigo-600 transition-colors text-sm font-medium">
             {{ social.name }}
           </a>
         </div>
@@ -63,8 +63,6 @@ const navLinks = [
 ]
 
 const socials = [
-  { name: 'Twitter', url: '#' },
-  { name: 'GitHub', url: '#' },
-  { name: 'LinkedIn', url: '#' }
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/dgarry/' }
 ]
 </script>

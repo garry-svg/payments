@@ -11,8 +11,8 @@
         </div>
         
         <h1 class="text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 leading-[1.1] font-sans">
-          Infrastructure for the <br />
-          <span class="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">Modern</span> Era.
+          Financial Messaging and <br />
+          <span class="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">Technologies</span>.
         </h1>
         
         <p class="text-xl text-slate-600 leading-relaxed max-w-xl font-sans">
