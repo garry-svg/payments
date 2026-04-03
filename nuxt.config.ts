@@ -8,7 +8,8 @@ export default defineNuxtConfig({
   modules: ['@nuxt/content', '@nuxtjs/tailwindcss', '@nuxt/image'],
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE || 'http://localhost:8080'
+ //     apiBase: process.env.API_BASE || 'http://localhost:8080'
+      apiBase: process.env.API_BASE || 'https://backend-latest-o6as.onrender.com'
     }
   },
   content: {
