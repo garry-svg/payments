@@ -1,18 +1,11 @@
 <template>
-  <div class="max-w-6xl mx-auto px-6 py-16 lg:py-24 bg-white min-h-screen">
-    <header class="border-b border-slate-100 pb-12 mb-16">
-      <h1 class="text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 mb-6">Engineering Log</h1>
-      <p class="text-xl text-slate-500 max-w-2xl leading-relaxed">
-        Deep dives into financial messaging, high-availability architecture, and the systems powering modern fintech.
-      </p>
-    </header>
-
+  <div class="max-w-6xl mx-auto px-6 pt-8 pb-16 lg:pt-12 lg:pb-24 bg-white min-h-screen">
     <div v-if="filteredPosts?.length">
       <!-- Featured Hero Post (Latest) -->
       <NuxtLink 
         v-if="featuredPost" 
         :to="featuredPost.path"
-        class="group block relative bg-white border border-slate-100 rounded-[2rem] p-8 md:p-12 hover:border-violet-200 hover:shadow-[0_20px_60px_-15px_rgba(139,92,246,0.15)] transition-all duration-500 mb-16 overflow-hidden"
+        class="group block relative bg-white border border-slate-100 rounded-[2rem] p-8 md:p-12 hover:border-violet-200 hover:shadow-[0_20px_60px_-15px_rgba(139,92,246,0.15)] transition-all duration-500 mb-12 overflow-hidden mx-auto max-w-6xl"
       >
         <div class="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-8">
           <div class="max-w-3xl">
@@ -41,7 +34,7 @@
       </NuxtLink>
 
       <!-- Secondary Grid (Older Posts) -->
-      <div v-if="regularPosts?.length" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
+      <div v-if="regularPosts?.length" class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <NuxtLink 
           v-for="post in regularPosts" 
           :key="post.path" 

@@ -1,9 +1,9 @@
 <template>
-  <div class="max-w-7xl mx-auto px-6 py-12 lg:py-20 min-h-screen bg-white">
-    <div class="flex flex-col lg:flex-row gap-12">
+  <div class="max-w-[1600px] w-full mx-auto px-4 lg:px-8 py-6 min-h-[calc(100vh-80px)] bg-white flex flex-col">
+    <div class="flex flex-col lg:flex-row gap-8 flex-grow">
       <!-- Sidebar / Menu -->
-      <aside class="w-full lg:w-64 flex flex-col gap-2">
-        <div class="mb-8 hidden lg:block px-4">
+      <aside class="w-full lg:w-72 flex flex-col gap-2 flex-shrink-0 pt-2">
+        <div class="mb-6 hidden lg:block px-4">
           <h1 class="text-xl font-bold text-slate-900 tracking-tight">System_Utilities</h1>
           <p class="text-xs text-slate-400 font-mono mt-1 uppercase tracking-widest">v4.1.0_PRO</p>
         </div>
@@ -30,77 +30,68 @@
       </aside>
 
       <!-- Workspace Area -->
-      <main class="flex-grow">
-        <div class="bg-white border border-slate-100 rounded-[2rem] shadow-xl shadow-slate-100/50 p-8 md:p-12 min-h-[600px] flex flex-col">
+      <main class="flex-grow flex flex-col h-[calc(100vh-140px)]">
+        <div class="bg-white border border-slate-100 rounded-[2rem] shadow-xl shadow-slate-100/50 p-6 md:p-8 flex-grow flex flex-col h-full">
           
           <!-- Active Tool Content -->
-          <div v-if="activeTool" class="flex flex-col h-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div v-if="activeTool" class="flex flex-col h-full space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
             
-            <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-50 pb-8">
+            <header class="flex flex-col md:flex-row md:items-start justify-between gap-4">
               <div>
-                <h2 class="text-3xl font-bold text-slate-900 tracking-tight mb-2">{{ activeTool.name }}</h2>
-                <p class="text-slate-500 max-w-xl leading-relaxed">{{ activeTool.description }}</p>
+                <h2 class="text-2xl font-bold text-slate-900 tracking-tight mb-1">{{ activeTool.name }}</h2>
+                <p class="text-slate-500 max-w-xl leading-relaxed text-sm">{{ activeTool.description }}</p>
               </div>
-              <div class="flex gap-3">
+              
+              <!-- Action Button Row -->
+              <div class="flex items-center gap-3 flex-shrink-0 pt-1">
                 <button 
-                  @click="clearCurrentTool"
-                  class="px-6 py-2.5 text-sm font-bold text-slate-400 hover:text-slate-900 border border-slate-200 rounded-xl transition-all"
+                  @click="clearBuffer"
+                  class="px-5 py-2 text-sm font-bold text-slate-400 hover:text-slate-900 border border-slate-200 rounded-xl transition-all"
                 >
                   Clear_Buffer
                 </button>
                 <button 
                   @click="processToolAction"
-                  :disabled="isLoading || !activeInput.trim()"
-                  class="px-8 py-2.5 bg-indigo-950 text-white font-bold rounded-xl transition-all hover:bg-indigo-900 disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-lg shadow-indigo-100"
+                  :disabled="isLoading || !buffer.trim()"
+                  class="px-6 py-2 bg-indigo-950 text-white text-sm font-bold rounded-xl transition-all hover:bg-indigo-900 disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-lg shadow-indigo-100 flex items-center gap-2"
                 >
+                  <span v-if="isLoading" class="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
                   {{ isLoading ? 'Processing...' : activeTool.actionLabel }}
                 </button>
               </div>
             </header>
 
-            <!-- Input Section -->
-            <div class="flex flex-col gap-3">
-              <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Input_Data</label>
-              <div class="relative group">
-                <textarea
-                  v-model="activeInput"
-                  rows="10"
-                  :placeholder="activeTool.placeholder"
-                  class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-6 font-mono text-sm text-slate-700 focus:outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50 transition-all resize-y custom-scrollbar"
-                ></textarea>
+            <!-- Unified Dark Workspace -->
+            <div class="flex-grow flex flex-col relative min-h-0 bg-slate-950 rounded-[1.5rem] overflow-hidden border border-slate-900 shadow-inner shadow-black/20">
+              <div class="absolute top-4 right-4 z-20 flex gap-2">
+                <button 
+                  v-if="buffer"
+                  @click="copyResult"
+                  class="flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md text-white border border-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-white/20 transition-all shadow-xl"
+                >
+                  <template v-if="isCopied">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    Copied
+                  </template>
+                  <template v-else>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy_Result
+                  </template>
+                </button>
               </div>
-              <div v-if="currentError" class="text-red-500 text-xs font-bold flex items-center gap-2 mt-1 ml-1 bg-red-50 p-3 rounded-lg border border-red-100">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+
+              <textarea
+                v-model="buffer"
+                :placeholder="activeTool.placeholder"
+                class="absolute inset-0 w-full h-full bg-transparent text-indigo-100 font-mono text-[15px] p-6 focus:outline-none transition-all resize-none custom-scrollbar leading-relaxed"
+                spellcheck="false"
+              ></textarea>
+
+              <div v-if="currentError" class="absolute bottom-6 left-6 right-6 p-4 bg-red-950/90 border border-red-500/50 rounded-xl text-red-200 text-xs font-bold flex items-center gap-3 backdrop-blur-sm animate-in fade-in zoom-in-95 z-30">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-red-400"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                 {{ currentError }}
+                <button @click="currentError = null" class="ml-auto text-red-400 hover:text-white">✕</button>
               </div>
-            </div>
-
-            <!-- Output Section -->
-            <div v-if="activeOutput" class="flex flex-col gap-3">
-              <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Processed_Result</label>
-              <div class="relative group">
-                <div class="absolute top-4 right-4 z-10">
-                  <button 
-                    @click="copyOutput"
-                    class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 text-white rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-xl"
-                  >
-                    <template v-if="isCopied">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                      Copied_Ok
-                    </template>
-                    <template v-else>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                      Copy_Result
-                    </template>
-                  </button>
-                </div>
-                <pre class="w-full h-80 bg-slate-900 border border-slate-900 rounded-2xl p-6 overflow-auto text-indigo-100 font-mono text-sm leading-relaxed custom-scrollbar whitespace-pre-wrap break-all shadow-inner shadow-black/20">{{ activeOutput }}</pre>
-              </div>
-            </div>
-
-            <!-- Empty Output Placeholder -->
-            <div v-else class="flex-grow flex flex-col items-center justify-center border-2 border-dashed border-slate-50 rounded-2xl min-h-[200px] text-slate-300">
-              <div class="font-mono text-[10px] uppercase tracking-[0.2em]">Ready_To_Process...</div>
             </div>
 
           </div>
@@ -156,63 +147,69 @@ const tools = [
 const activeToolId = ref('xml-fmt')
 const activeTool = computed(() => tools.find(t => t.id === activeToolId.value))
 
-const activeInput = ref('')
-const activeOutput = ref('')
+const buffer = ref('')
 const currentError = ref<string | null>(null)
 const isLoading = ref(false)
 const isCopied = ref(false)
 
-// Reset state when switching tools
+// Reset errors when switching tools but keep buffer optionally? 
+// User requested resetting unified workspace to empty string on Clear_Buffer.
+// Usually switching tools might preserve buffer if they are related, but here they are different.
 watch(activeToolId, () => {
-  activeInput.value = ''
-  activeOutput.value = ''
   currentError.value = null
 })
 
-function clearCurrentTool() {
-  activeInput.value = ''
-  activeOutput.value = ''
+function clearBuffer() {
+  buffer.value = ''
   currentError.value = null
 }
 
-async function copyOutput() {
-  if (!activeOutput.value) return
-  await navigator.clipboard.writeText(activeOutput.value)
+async function copyResult() {
+  if (!buffer.value) return
+  await navigator.clipboard.writeText(buffer.value)
   isCopied.value = true
   setTimeout(() => { isCopied.value = false }, 2000)
 }
 
 // Unified Action Handler
 async function processToolAction() {
-  if (!activeInput.value.trim()) return
+  if (!buffer.value.trim()) return
   
   isLoading.value = true
   currentError.value = null
   
   try {
     if (activeToolId.value === 'xml-fmt') {
-      const data = await $fetch<string>(`${apiBase}/api/format/xml`, {
+      const data = await $fetch<string>(`${apiBase}/api/v1/format/xml`, {
         method: 'POST',
-        body: activeInput.value,
-        headers: { 'Content-Type': 'application/xml' }
+        body: buffer.value,
+        headers: { 
+          'Content-Type': 'application/xml',
+          'Accept': 'application/xml'
+        }
       })
-      activeOutput.value = data
+      buffer.value = data
     } 
     else if (activeToolId.value === 'json-fmt') {
-      const data = await $fetch<any>(`${apiBase}/api/format/json`, {
+      const data = await $fetch<any>(`${apiBase}/api/v1/format/json`, {
         method: 'POST',
-        body: activeInput.value,
+        body: buffer.value,
         headers: { 'Content-Type': 'application/json' }
       })
-      activeOutput.value = typeof data === 'string' ? data : JSON.stringify(data, null, 2)
+      buffer.value = typeof data === 'string' ? data : JSON.stringify(data, null, 2)
     }
     else if (activeToolId.value === 'b64-enc' || activeToolId.value === 'b64-dec') {
       const mode = activeToolId.value === 'b64-enc' ? 'encode' : 'decode'
-      const data = await $fetch<{ result: string }>(`${apiBase}/api/convert/base64`, {
+      const params = new URLSearchParams()
+      params.append('string', buffer.value)
+      params.append('mode', mode)
+      
+      const data = await $fetch<string>(`${apiBase}/api/v1/convert/base64`, {
         method: 'POST',
-        body: { data: activeInput.value, mode }
+        body: params,
+        headers: { 'Accept': 'text/plain' }
       })
-      activeOutput.value = data.result
+      buffer.value = data
     }
   } catch (err: any) {
     currentError.value = err.data?.message || err.message || 'Processing failed. Please check your input format.'
@@ -232,23 +229,18 @@ async function processToolAction() {
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  @apply bg-slate-50;
+  background: #020617;
+  border-radius: 0 1.5rem 1.5rem 0;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-slate-200 rounded-full;
+  background: #1e293b;
+  border-radius: 10px;
+  border: 2px solid #020617;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  @apply bg-slate-300;
-}
-
-pre.custom-scrollbar::-webkit-scrollbar-track {
-  @apply bg-slate-900;
-}
-pre.custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-slate-700 rounded-full;
+  background: #334155;
 }
 </style>

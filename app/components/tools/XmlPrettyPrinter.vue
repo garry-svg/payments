@@ -10,11 +10,12 @@ async function handleFormat() {
   loading.value = true;
   error.value = null;
   try {
-    const data = await $fetch<string>(`${config.public.apiBase}/api/format/xml`, {
+    const data = await $fetch<string>(`${config.public.apiBase}/api/v1/format/xml`, {
       method: 'POST',
       body: input.value,
       headers: {
-        'Content-Type': 'application/xml'
+        'Content-Type': 'application/xml',
+        'Accept': 'application/xml'
       }
     });
     output.value = data;
