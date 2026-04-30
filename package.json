@@ -19,6 +19,7 @@
     "vue-router": "^5.0.4"
   },
   "devDependencies": {
+    "@nuxtjs/sitemap": "^8.0.14",
     "@tailwindcss/typography": "^0.5.19"
   }
 }

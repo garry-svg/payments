@@ -98,11 +98,11 @@
         </NuxtLink>
       </div>
 
-      <div v-if="posts?.length" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div v-if="displayPosts?.length" class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <NuxtLink 
-          v-for="post in posts" 
+          v-for="post in displayPosts" 
           :key="post.path" 
-          :to="post.path"
+          :to="post.slugPath"
           class="group flex flex-col p-6 bg-white border border-slate-200 rounded-2xl hover:border-indigo-300 hover:shadow-lg hover:shadow-slate-200/50 transition-all duration-300 h-full"
         >
           <!-- Meta row: Date & Tag -->
@@ -179,12 +179,22 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 const { data: posts } = await useAsyncData('recent-posts', () => 
   queryCollection('blog')
     .order('date', 'DESC')
     .limit(3)
     .all()
 )
+
+const displayPosts = computed(() => {
+  if (!posts.value) return []
+  return posts.value.map(post => ({
+    ...post,
+    slugPath: `/${extractSlug(post.path)}/`
+  }))
+})
 
 // Utility to fall back if description is missing
 function stripMarkdown(text: string) {

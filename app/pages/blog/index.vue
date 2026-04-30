@@ -4,7 +4,7 @@
       <!-- Featured Hero Post (Latest) -->
       <NuxtLink 
         v-if="featuredPost" 
-        :to="featuredPost.path"
+        :to="featuredPost.slugPath"
         class="group block relative bg-white border border-slate-100 rounded-[2rem] p-8 md:p-12 hover:border-violet-200 hover:shadow-[0_20px_60px_-15px_rgba(139,92,246,0.15)] transition-all duration-500 mb-12 overflow-hidden mx-auto max-w-6xl"
       >
         <div class="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-8">
@@ -38,7 +38,7 @@
         <NuxtLink 
           v-for="post in regularPosts" 
           :key="post.path" 
-          :to="post.path"
+          :to="post.slugPath"
           class="group flex flex-col h-full p-8 bg-white border border-slate-100 rounded-2xl hover:border-violet-200 hover:shadow-[0_10px_40px_-10px_rgba(79,70,229,0.12)] transition-all duration-300"
         >
           <div class="flex items-center gap-3 mb-4">
@@ -85,11 +85,16 @@ const { data: posts } = await useAsyncData('blog-posts', () =>
 // Filter logic handling Deep Paths and Drafts
 const filteredPosts = computed(() => {
   if (!posts.value) return []
-  return posts.value.filter(post => {
-    const isDraft = post.path.includes('_drafts')
-    const isOutputPost = post.path.startsWith('/blog/output/posts')
-    return !isDraft && isOutputPost
-  })
+  return posts.value
+    .filter(post => {
+      const isDraft = post.path.includes('_drafts')
+      const isOutputPost = post.path.startsWith('/blog/output/posts')
+      return !isDraft && isOutputPost
+    })
+    .map(post => ({
+      ...post,
+      slugPath: `/${extractSlug(post.path)}/`
+    }))
 })
 
 // Explicitly separate the featured post from the secondary grid

@@ -5,7 +5,16 @@ export default defineNuxtConfig({
     compatibilityVersion: 4
   },
   devtools: { enabled: true },
-  modules: ['@nuxt/content', '@nuxtjs/tailwindcss', '@nuxt/image'],
+  modules: [
+    '@nuxt/content',
+    '@nuxtjs/tailwindcss',
+    '@nuxt/image',
+    '@nuxtjs/sitemap'
+  ],
+  site: {
+    url: 'https://davegarry.com',
+    name: 'Dave Garry - Financial Messaging & Technologies'
+  },
   runtimeConfig: {
     public: {
  //     apiBase: process.env.API_BASE || 'http://localhost:8080'
@@ -17,5 +26,19 @@ export default defineNuxtConfig({
       theme: 'github-dark',
       preload: ['json', 'xml', 'javascript', 'typescript', 'bash', 'yaml', 'markdown']
     }
+  },
+  router: {
+    options: {
+      trailingSlash: true
+    }
+  },
+  sitemap: {
+    sources: [
+      '/api/sitemap-urls'
+    ],
+    exclude: [
+      '/blog/output/posts/**',
+      '/_content/**'
+    ]
   }
 })
