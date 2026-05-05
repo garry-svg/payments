@@ -1,9 +1,9 @@
 import { extractSlug } from '../../app/utils/blog'
 
 export default defineEventHandler(async (event) => {
-  const siteUrl = 'https://davegarry.com'
+  const base = 'https://davegarry.com'
   
-  // Use queryCollection (Nuxt Content v3/v4 equivalent)
+  // Use queryCollection (Nuxt Content v3 equivalent)
   const posts = await queryCollection(event, 'blog').all()
   
   const blogUrls = posts
@@ -14,27 +14,19 @@ export default defineEventHandler(async (event) => {
     })
     .map(post => {
       const slug = extractSlug(post.path)
-      // Manually construction: Ensure it ends with /
-      let correctedPath = `/${slug}`
-      if (!correctedPath.endsWith('/')) {
-        correctedPath += '/'
-      }
       
-      return {
-        loc: `${siteUrl}${correctedPath}`,
-        lastmod: post.date || new Date(),
-        // Crucially, add _sitemap: 'default' to force the sitemap module 
-        // to stop normalizing the URL and accept the explicit string.
-        _sitemap: 'default'
-      }
+      // Manual concatenation to force the slash to persist in the XML
+      // Clean path to avoid double slashes and explicitly append /
+      return `${base}/${slug}`.replace(/\/$/, '') + '/'
     })
 
-  // Explicitly include main pages with trailing slashes and the _sitemap flag
-  const staticPages = [
-    { loc: `${siteUrl}/`, lastmod: new Date(), _sitemap: 'default' },
-    { loc: `${siteUrl}/blog/`, lastmod: new Date(), _sitemap: 'default' },
-    { loc: `${siteUrl}/utilities/`, lastmod: new Date(), _sitemap: 'default' }
+  // Explicitly include static pages as raw strings with forced slashes
+  const staticUrls = [
+    `${base}/`,
+    `${base}/blog/`,
+    `${base}/utilities/`
   ]
 
-  return [...staticPages, ...blogUrls]
+  // Returning a simple array of strings (NOT objects) to bypass module normalization
+  return [...staticUrls, ...blogUrls]
 })

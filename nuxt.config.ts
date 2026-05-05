@@ -33,11 +33,15 @@ export default defineNuxtConfig({
     }
   },
   sitemap: {
+    strictNuxtContentAds: true,
+    excludeAppSources: true,
+    disableContentIdx: true,
     trailingSlash: true,
+    autoLastmod: false,
+    strictNuxtContentAds: true,
     defaults: {
       trailingSlash: true
     },
-    strictNuxtContentAds: false,
     sources: [
       '/api/sitemap-urls'
     ],
