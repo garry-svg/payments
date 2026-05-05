@@ -64,8 +64,6 @@ const { data: post } = await useAsyncData(`post-${cleanedSlug}`, async () => {
 
 // If the post is found, set the SEO metadata
 if (post.value) {
-  useContentHead(post.value)
-  
   useSeoMeta({
     title: `${post.value.title} - Dave Garry`,
     ogTitle: `${post.value.title} - Dave Garry`,
