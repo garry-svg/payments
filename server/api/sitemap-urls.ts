@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     })
     .map(post => {
       const slug = extractSlug(post.path)
-      // Manually construct the loc string to ensure it ends with a slash
+      // Manually construction: Ensure it ends with /
       let correctedPath = `/${slug}`
       if (!correctedPath.endsWith('/')) {
         correctedPath += '/'
@@ -23,17 +23,18 @@ export default defineEventHandler(async (event) => {
       return {
         loc: `${siteUrl}${correctedPath}`,
         lastmod: post.date || new Date(),
-        changefreq: 'monthly' as const,
-        priority: 0.8
+        // Crucially, add _sitemap: 'default' to force the sitemap module 
+        // to stop normalizing the URL and accept the explicit string.
+        _sitemap: 'default'
       }
     })
 
-  // Explicitly include main pages with trailing slashes
-  const mainPages = [
-    { loc: `${siteUrl}/`, lastmod: new Date(), changefreq: 'daily' as const, priority: 1.0 },
-    { loc: `${siteUrl}/blog/`, lastmod: new Date(), changefreq: 'weekly' as const, priority: 0.9 },
-    { loc: `${siteUrl}/utilities/`, lastmod: new Date(), changefreq: 'monthly' as const, priority: 0.7 }
+  // Explicitly include main pages with trailing slashes and the _sitemap flag
+  const staticPages = [
+    { loc: `${siteUrl}/`, lastmod: new Date(), _sitemap: 'default' },
+    { loc: `${siteUrl}/blog/`, lastmod: new Date(), _sitemap: 'default' },
+    { loc: `${siteUrl}/utilities/`, lastmod: new Date(), _sitemap: 'default' }
   ]
 
-  return [...mainPages, ...blogUrls]
+  return [...staticPages, ...blogUrls]
 })
