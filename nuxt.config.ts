@@ -12,7 +12,7 @@ export default defineNuxtConfig({
     '@nuxtjs/sitemap'
   ],
   site: {
-    url: 'https://davegarry.com',
+    url: 'https://davegarry.com/',
     name: 'Dave Garry - Financial Messaging & Technologies'
   },
   runtimeConfig: {
@@ -33,6 +33,11 @@ export default defineNuxtConfig({
     }
   },
   sitemap: {
+    trailingSlash: true,
+    defaults: {
+      trailingSlash: true
+    },
+    strictNuxtContentAds: false,
     sources: [
       '/api/sitemap-urls'
     ],
