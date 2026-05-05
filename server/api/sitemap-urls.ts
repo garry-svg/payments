@@ -1,21 +1,33 @@
 import { extractSlug } from '../../app/utils/blog'
 
 export default defineEventHandler(async (event) => {
-  // We use queryCollection to get all blog posts
+  const siteUrl = 'https://davegarry.com'
+  
+  // Fetch all blog posts
   const posts = await queryCollection(event, 'blog').all()
   
-  return posts
+  const blogUrls = posts
     .filter(post => {
       const isDraft = post.path.includes('_drafts')
       const isOutputPost = post.path.startsWith('/blog/output/posts')
       return !isDraft && isOutputPost
     })
     .map(post => {
-      // Ensure the URL always ends with a trailing slash to match WordPress structure
       const slug = extractSlug(post.path)
+      // Ensure absolute URL with trailing slash
       return {
-        loc: `/${slug}/`,
+        loc: `${siteUrl}/${slug}/`,
         lastmod: post.date 
       }
     })
+
+  // Explicitly include main static pages to ensure they have trailing slashes
+  const staticUrls = [
+    { loc: `${siteUrl}/`, lastmod: new Date().toISOString() },
+    { loc: `${siteUrl}/blog/`, lastmod: new Date().toISOString() },
+    { loc: `${siteUrl}/utilities/`, lastmod: new Date().toISOString() }
+  ]
+
+  // Combine and return all URLs
+  return [...staticUrls, ...blogUrls]
 })
