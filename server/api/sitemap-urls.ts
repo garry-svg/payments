@@ -2,7 +2,6 @@ import { extractSlug } from '../../app/utils/blog'
 
 export default defineEventHandler(async (event) => {
   // We use queryCollection to get all blog posts
-  // In Nuxt Content v3, we can use queryCollection(event, 'collectionName')
   const posts = await queryCollection(event, 'blog').all()
   
   return posts
@@ -12,8 +11,10 @@ export default defineEventHandler(async (event) => {
       return !isDraft && isOutputPost
     })
     .map(post => {
+      // Ensure the URL always ends with a trailing slash to match WordPress structure
+      const slug = extractSlug(post.path)
       return {
-        loc: `/${extractSlug(post.path)}/`,
+        loc: `/${slug}/`,
         lastmod: post.date 
       }
     })

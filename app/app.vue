@@ -1,3 +1,17 @@
+<script setup lang="ts">
+const route = useRoute()
+const canonicalUrl = `https://davegarry.com${route.path.replace(/\/$/, '')}/`
+
+useHead({
+  link: [
+    {
+      rel: 'canonical',
+      href: canonicalUrl
+    }
+  ]
+})
+</script>
+
 <template>
   <div class="antialiased text-slate-900 bg-white min-h-screen font-sans selection:bg-indigo-100 selection:text-indigo-900">
     <NuxtLayout>

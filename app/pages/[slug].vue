@@ -62,12 +62,19 @@ const { data: post } = await useAsyncData(`post-${cleanedSlug}`, async () => {
   })
 })
 
-useHead({
-  title: post.value?.title,
-  meta: [
-    { name: 'description', content: post.value?.description }
-  ]
-})
+// If the post is found, set the SEO metadata
+if (post.value) {
+  useContentHead(post.value)
+  
+  useSeoMeta({
+    title: `${post.value.title} - Dave Garry`,
+    ogTitle: `${post.value.title} - Dave Garry`,
+    description: post.value.description,
+    ogDescription: post.value.description,
+    ogImage: post.value.image ? `https://davegarry.com${post.value.image.startsWith('/') ? '' : '/'}${post.value.image}` : undefined,
+    twitterCard: 'summary_large_image',
+  })
+}
 </script>
 
 <style>
