@@ -3,7 +3,7 @@ import { extractSlug } from '../../app/utils/blog'
 export default defineEventHandler(async (event) => {
   const siteUrl = 'https://davegarry.com'
   
-  // Fetch all blog posts
+  // Using queryCollection (Nuxt Content v3 equivalent of queryContent)
   const posts = await queryCollection(event, 'blog').all()
   
   const blogUrls = posts
@@ -14,20 +14,24 @@ export default defineEventHandler(async (event) => {
     })
     .map(post => {
       const slug = extractSlug(post.path)
-      // Ensure absolute URL with trailing slash
+      const path = `/${slug}/`
+      
+      // Ensure the path always ends with a trailing slash as requested
+      const locPath = path.endsWith('/') ? path : `${path}/`
+      
       return {
-        loc: `${siteUrl}/${slug}/`,
+        loc: `${siteUrl}${locPath}`,
         lastmod: post.date 
       }
     })
 
-  // Explicitly include main static pages to ensure they have trailing slashes
+  // Manually ensure root and main static pages have trailing slashes
   const staticUrls = [
     { loc: `${siteUrl}/`, lastmod: new Date().toISOString() },
     { loc: `${siteUrl}/blog/`, lastmod: new Date().toISOString() },
     { loc: `${siteUrl}/utilities/`, lastmod: new Date().toISOString() }
   ]
 
-  // Combine and return all URLs
+  // Combine and return to ensure every URL in the sitemap respects the trailingSlash: true setting
   return [...staticUrls, ...blogUrls]
 })
