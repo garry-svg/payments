@@ -38,7 +38,6 @@ export default defineNuxtConfig({
     disableContentIdx: true,
     trailingSlash: true,
     autoLastmod: false,
-    strictNuxtContentAds: true,
     defaults: {
       trailingSlash: true
     },
@@ -48,6 +47,20 @@ export default defineNuxtConfig({
     exclude: [
       '/blog/output/posts/**',
       '/_content/**'
-    ]
+    ],
+    hooks: {
+      'sitemap:resolved': (ctx) => {
+        ctx.urls.forEach((url) => {
+          // Replace localhost with production domain
+          if (url.loc.includes('http://127.0.0.1:3000')) {
+            url.loc = url.loc.replace('http://127.0.0.1:3000', 'https://davegarry.com')
+          }
+          // Ensure trailing slash
+          if (url.loc && !url.loc.endsWith('/')) {
+            url.loc += '/'
+          }
+        })
+      }
+    }
   }
 })

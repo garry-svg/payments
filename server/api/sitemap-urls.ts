@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   // Use queryCollection (Nuxt Content v3 equivalent)
   const posts = await queryCollection(event, 'blog').all()
   
-  const blogUrls = posts
+  return posts
     .filter(post => {
       const isDraft = post.path.includes('_drafts')
       const isOutputPost = post.path.startsWith('/blog/output/posts')
@@ -15,18 +15,19 @@ export default defineEventHandler(async (event) => {
     .map(post => {
       const slug = extractSlug(post.path)
       
-      // Manual concatenation to force the slash to persist in the XML
-      // Clean path to avoid double slashes and explicitly append /
-      return `${base}/${slug}`.replace(/\/$/, '') + '/'
+      const images = []
+      if (post.image) {
+        images.push({
+          loc: post.image.startsWith('http') ? post.image : `${base}${post.image.startsWith('/') ? '' : '/'}${post.image}`,
+          title: post.title
+        })
+      }
+
+      // Return full absolute URL in the loc property
+      return {
+        loc: `https://davegarry.com/${slug}`,
+        lastmod: post.date || new Date(),
+        images
+      }
     })
-
-  // Explicitly include static pages as raw strings with forced slashes
-  const staticUrls = [
-    `${base}/`,
-    `${base}/blog/`,
-    `${base}/utilities/`
-  ]
-
-  // Returning a simple array of strings (NOT objects) to bypass module normalization
-  return [...staticUrls, ...blogUrls]
 })
