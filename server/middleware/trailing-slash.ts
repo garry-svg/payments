@@ -1,21 +1,18 @@
-import { appendTrailingSlash } from 'ufo'
-
 export default defineEventHandler((event) => {
     const path = getRequestPath(event)
 
-    // 1. Only target actual page requests (ignore _nuxt, _content, and files with extensions)
-    if (path.includes('.') || path.startsWith('/_')) {
+    // 1. Skip the homepage, internal Nuxt paths, and actual files (like .css, .js, .png)
+    if (path === '/' || path.startsWith('/_') || path.includes('.')) {
         return
     }
 
-    // 2. If it's not the root and doesn't have a trailing slash
-    if (path !== '/' && !path.endsWith('/')) {
-        const url = getRequestURL(event)
+    // 2. If it doesn't have a trailing slash, redirect
+    if (!path.endsWith('/')) {
+        const query = getQuery(event)
+        const queryString = Object.keys(query).length > 0
+            ? '?' + new URLSearchParams(query as any).toString()
+            : ''
 
-        // Use the 'ufo' utility to safely add the slash and keep query params
-        const nextPath = appendTrailingSlash(path) + url.search
-
-        // Perform a 301 redirect
-        return sendRedirect(event, nextPath, 301)
+        return sendRedirect(event, path + '/' + queryString, 301)
     }
 })
