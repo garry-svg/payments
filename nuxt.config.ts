@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   future: {
@@ -17,7 +16,6 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
- //     apiBase: process.env.API_BASE || 'http://localhost:8080'
       apiBase: process.env.API_BASE || 'https://backend-latest-o6as.onrender.com'
     }
   },
@@ -36,7 +34,9 @@ export default defineNuxtConfig({
     strictNuxtContentAds: true,
     excludeAppSources: true,
     disableContentIdx: true,
-    trailingSlash: true,
+    // Keep this 0 in dev if you're making changes,
+    // but you can remove it or set it higher for production.
+    cacheMaxAgeSeconds: 0,
     autoLastmod: false,
     defaults: {
       trailingSlash: true
@@ -47,20 +47,7 @@ export default defineNuxtConfig({
     exclude: [
       '/blog/output/posts/**',
       '/_content/**'
-    ],
-    hooks: {
-      'sitemap:resolved': (ctx) => {
-        ctx.urls.forEach((url) => {
-          // Replace localhost with production domain
-          if (url.loc.includes('http://127.0.0.1:3000')) {
-            url.loc = url.loc.replace('http://127.0.0.1:3000', 'https://davegarry.com')
-          }
-          // Ensure trailing slash
-          if (url.loc && !url.loc.endsWith('/')) {
-            url.loc += '/'
-          }
-        })
-      }
-    }
+    ]
+    // Removed hooks: sitemap:resolved because your Nitro plugin handles it now!
   }
 })
