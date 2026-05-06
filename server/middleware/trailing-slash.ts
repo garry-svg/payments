@@ -1,18 +1,18 @@
 export default defineEventHandler((event) => {
     const path = getRequestPath(event)
 
-    // 1. Skip the homepage, internal Nuxt paths, and actual files (like .css, .js, .png)
+    // 1. Filter out everything except actual page paths
+    // Skip: Homepage, Nuxt internal (_), and static files (.)
     if (path === '/' || path.startsWith('/_') || path.includes('.')) {
         return
     }
 
-    // 2. If it doesn't have a trailing slash, redirect
+    // 2. If it's missing the slash, redirect using the full URL to keep the host intact
     if (!path.endsWith('/')) {
-        const query = getQuery(event)
-        const queryString = Object.keys(query).length > 0
-            ? '?' + new URLSearchParams(query as any).toString()
-            : ''
+        const url = getRequestURL(event)
+        const newPath = path + '/' + url.search
 
-        return sendRedirect(event, path + '/' + queryString, 301)
+        // Using a full URL redirect often fixes 404 issues on Render/Cloudflare
+        return sendRedirect(event, newPath, 301)
     }
 })
