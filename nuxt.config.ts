@@ -1,37 +1,25 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   future: { compatibilityVersion: 4 },
-  modules: [
-    '@nuxt/content',
-    '@nuxtjs/tailwindcss',
-    '@nuxt/image',
-    '@nuxtjs/sitemap'
-  ],
+  modules: ['@nuxt/content', '@nuxtjs/tailwindcss', '@nuxt/image', '@nuxtjs/sitemap'],
   site: {
     url: 'https://davegarry.com',
     trailingSlash: true
   },
-  content: {
-    // This makes the Content module stop 404-ing when it sees a slash
-    trailingSlash: true
-  },
   router: {
     options: {
-      // Tell the router that slashes are "correct"
+      // We set this to true so the sitemap generates correctly
       trailingSlash: true,
-      // Tell the router NOT to be picky. This stops the "No match found" errors.
       strict: false
     }
   },
   nitro: {
     prerender: {
-      crawlLinks: true,
-      failOnError: false,
-      routes: ['/sitemap.xml', '/']
+      // This is the ONLY setting that matters for Render.
+      // It forces Nuxt to build /page/index.html instead of /page.html.
+      // This makes the slash "real" so it won't flicker.
+      autoSubfolderIndex: true,
+      crawlLinks: true
     }
-  },
-  sitemap: {
-    // This ensures your sitemap.xml stays alive and correct
-    trailingSlash: true
   }
 })
