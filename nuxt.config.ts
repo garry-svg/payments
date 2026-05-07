@@ -9,42 +9,27 @@ export default defineNuxtConfig({
   ],
   site: {
     url: 'https://davegarry.com',
-    name: 'Dave Garry - Financial Messaging & Technologies',
     trailingSlash: true
   },
-  // ADD THIS CONTENT BLOCK
+  // Ensure the content module is actually set to handle the slashes
   content: {
-    // This tells Nuxt Content to ignore trailing slashes when matching files
+    documentDriven: true, // This can help Nuxt Content align with the router
     trailingSlash: true
   },
   router: {
     options: {
       trailingSlash: true,
-      // Change strict to FALSE.
-      // This stops the "No match found" warning because it allows
-      // the router to resolve /path and /path/ to the same component.
-      strict: false
+      strict: true // Switch back to true now that we have autoSubfolderIndex
     }
   },
   nitro: {
     prerender: {
       autoSubfolderIndex: true,
-      crawlLinks: true, // You can turn this back on now
-      failOnError: false,
-      routes: ['/', '/blog', '/sitemap.xml']
-    }
-  },
-  experimental: {
-    defaults: {
-      nuxtLink: {
-        trailingSlash: 'append'
-      }
+      crawlLinks: true,
+      routes: ['/sitemap.xml']
     }
   },
   sitemap: {
-    strictNuxtContentAds: true,
     trailingSlash: true,
-    sources: ['/api/sitemap-urls'],
-    exclude: ['/blog/output/posts/**', '/_content/**']
   }
 })
