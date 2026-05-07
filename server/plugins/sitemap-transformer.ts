@@ -1,19 +1,22 @@
 export default defineNitroPlugin((nitroApp) => {
   // @ts-ignore
   nitroApp.hooks.hook('sitemap:output', async (ctx) => {
-    // Check if sitemap content is provided as a string
+    // console.error is used to ensure visibility in dev mode logs
+    console.error('[Sitemap Transformer] Enforcing trailing slashes for davegarry.com');
+
+    const transform = (content: string) => {
+      // Matches <loc> tags for davegarry.com that don't end in a slash.
+      // Uses a negative lookbehind to avoid double slashes.
+      return content.replace(
+        /<loc>(https:\/\/davegarry\.com[^<]*?)(?<!\/)<\/loc>/g,
+        '<loc>$1/</loc>'
+      );
+    };
+
     if (typeof ctx.sitemap === 'string') {
-      ctx.sitemap = ctx.sitemap.replace(
-          /<loc>(https:\/\/davegarry\.com\/[^<]+?)(?<!\/)<\/loc>/g,
-          '<loc>$1/</loc>'
-      )
+      ctx.sitemap = transform(ctx.sitemap);
+    } else if (typeof ctx.content === 'string') {
+      ctx.content = transform(ctx.content);
     }
-    // Fallback if sitemap content is provided in the 'content' property
-    else if (typeof ctx.content === 'string') {
-      ctx.content = ctx.content.replace(
-          /<loc>(https:\/\/davegarry\.com\/[^<]+?)(?<!\/)<\/loc>/g,
-          '<loc>$1/</loc>'
-      )
-    }
-  })
-})
+  });
+});

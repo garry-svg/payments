@@ -31,7 +31,7 @@ export default defineNuxtConfig({
     }
   },
   sitemap: {
-    strictNuxtContentAds: true,
+    strictNuxtContentPaths: true,
     excludeAppSources: true,
     disableContentIdx: true,
     // Keep this 0 in dev if you're making changes,

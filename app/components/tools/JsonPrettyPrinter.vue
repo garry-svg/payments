@@ -4,6 +4,7 @@ const input = ref('');
 const output = ref('');
 const loading = ref(false);
 const error = ref<string | null>(null);
+const copied = ref(false);
 
 async function handleFormat() {
   if (!input.value.trim()) return;
@@ -25,6 +26,30 @@ async function handleFormat() {
     loading.value = false;
   }
 }
+
+function copyToClipboard() {
+  if (!output.value) return;
+  navigator.clipboard.writeText(output.value);
+  copied.value = true;
+  setTimeout(() => (copied.value = false), 2000);
+}
+
+const highlightedOutput = computed(() => {
+  if (!output.value) return '';
+  
+  // Escape HTML
+  let html = output.value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // Highlight hidden/invalid characters
+  return html
+    .replace(/\r/g, '<span class="text-red-500 bg-red-100 dark:bg-red-900/30 px-0.5 rounded font-bold" title="Carriage Return">\\r</span>')
+    .replace(/\t/g, '<span class="text-red-500 bg-red-100 dark:bg-red-900/30 px-0.5 rounded font-bold" title="Tab">\\t</span>')
+    .replace(/\u00A0/g, '<span class="text-red-500 bg-red-100 dark:bg-red-900/30 px-0.5 rounded font-bold" title="Non-breaking Space">\\u00A0</span>')
+    .replace(/\n/g, '<span class="text-red-500/50 px-0.5" title="Line Feed">↵</span>\n');
+});
 </script>
 
 <template>
@@ -51,13 +76,22 @@ async function handleFormat() {
       {{ error }}
     </div>
 
-    <div v-if="output">
-      <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Pretty JSON</label>
-      <textarea
-        v-model="output"
-        readonly
-        class="w-full h-40 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg font-mono text-sm outline-none"
-      ></textarea>
+    <div v-if="output" class="space-y-2">
+      <div class="flex items-center justify-between">
+        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">Pretty JSON</label>
+        <button 
+          @click="copyToClipboard"
+          class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
+        >
+          <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          {{ copied ? 'Copied!' : 'Copy' }}
+        </button>
+      </div>
+      <div 
+        class="w-full h-80 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg font-mono text-sm overflow-auto whitespace-pre-wrap break-all"
+        v-html="highlightedOutput"
+      ></div>
     </div>
   </div>
 </template>

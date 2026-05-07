@@ -1,18 +1,20 @@
 export default defineEventHandler((event) => {
-    const path = getRequestPath(event)
+  const url = getRequestURL(event)
+  const pathname = url.pathname
+  const search = url.search
 
-    // 1. Filter out everything except actual page paths
-    // Skip: Homepage, Nuxt internal (_), and static files (.)
-    if (path === '/' || path.startsWith('/_') || path.includes('.')) {
-        return
-    }
+  // Exclude:
+  // - Homepage ('/')
+  // - Internal Nuxt paths (starting with '/_')
+  // - API routes (starting with '/api')
+  // - Static files (containing a '.')
+  if (pathname === '/' || pathname.startsWith('/_') || pathname.startsWith('/api') || pathname.includes('.')) {
+    return
+  }
 
-    // 2. If it's missing the slash, redirect using the full URL to keep the host intact
-    if (!path.endsWith('/')) {
-        const url = getRequestURL(event)
-        const newPath = path + '/' + url.search
-
-        // Using a full URL redirect often fixes 404 issues on Render/Cloudflare
-        return sendRedirect(event, newPath, 301)
-    }
+  // Redirect to trailing slash if missing
+  if (!pathname.endsWith('/')) {
+    // Preserve query parameters
+    return sendRedirect(event, `${pathname}/${search}`, 301)
+  }
 })
