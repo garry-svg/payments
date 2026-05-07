@@ -1,30 +1,32 @@
 export default defineNuxtConfig({
-  // ... existing modules
-
-  content: {
-    // This is the missing link!
-    // It tells the content engine to match "page/" to "page.md"
+  compatibilityDate: '2024-04-03',
+  future: { compatibilityVersion: 4 },
+  modules: [
+    '@nuxt/content',
+    '@nuxtjs/tailwindcss',
+    '@nuxt/image',
+    '@nuxtjs/sitemap'
+  ],
+  site: {
+    url: 'https://davegarry.com',
     trailingSlash: true
   },
-
   router: {
     options: {
+      // This allows Nuxt to match both /page and /page/ to the same file
+      // which stops the "flicker" because Nuxt won't force-strip the slash
       trailingSlash: true,
-      // Change this back to FALSE for the build.
-      // It allows the prerenderer to be flexible while the
-      // site remains "slashy" for the user.
       strict: false
     }
   },
-
   nitro: {
     prerender: {
-      // Keep this! It's what makes Render happy.
-      autoSubfolderIndex: true,
       crawlLinks: true,
-      // This will let the build finish even if there are minor hiccups
-      failOnError: false,
+      failOnError: false, // Prevents the build from crashing
       routes: ['/sitemap.xml', '/']
     }
+  },
+  sitemap: {
+    trailingSlash: true
   }
 })
