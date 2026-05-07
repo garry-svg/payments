@@ -28,9 +28,17 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
+      autoSubfolderIndex: true,
       crawlLinks: true, // You can turn this back on now
       failOnError: false,
       routes: ['/', '/blog', '/sitemap.xml']
+    }
+  },
+  experimental: {
+    defaults: {
+      nuxtLink: {
+        trailingSlash: 'append'
+      }
     }
   },
   sitemap: {
