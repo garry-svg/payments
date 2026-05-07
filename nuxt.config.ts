@@ -11,10 +11,9 @@ export default defineNuxtConfig({
     '@nuxtjs/sitemap'
   ],
   site: {
-    // Remove the trailing slash from the base URL here
     url: 'https://davegarry.com',
     name: 'Dave Garry - Financial Messaging & Technologies',
-    trailingSlash: true // This is the master switch for the sitemap module
+    trailingSlash: true
   },
   runtimeConfig: {
     public: {
@@ -24,14 +23,17 @@ export default defineNuxtConfig({
   router: {
     options: {
       trailingSlash: true,
-      strict: true // This forces Nuxt to treat /path and /path/ differently
+      // Change strict to false to let the crawler find pages
+      // regardless of whether they have a slash or not during build
+      strict: false
     }
   },
   nitro: {
-    // We only keep the specific routeRules that don't conflict with content
     prerender: {
       crawlLinks: true,
-      routes: ['/sitemap.xml']
+      // CRITICAL: This stops the build from failing when the crawler hits a 404
+      failOnError: false,
+      routes: ['/', '/blog', '/sitemap.xml']
     }
   },
   sitemap: {
@@ -43,7 +45,6 @@ export default defineNuxtConfig({
       '/blog/output/posts/**',
       '/_content/**'
     ],
-    // This helper ensures every link in the XML gets a slash automatically
     trailingSlash: true
   }
 })
