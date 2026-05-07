@@ -30,6 +30,16 @@ export default defineNuxtConfig({
       trailingSlash: true
     }
   },
+  nitro: {
+    routeRules: {
+      '/': { prerender: true },
+      '/_nuxt/**': { redirect: false },
+      '/**/*.**': { redirect: false },
+      '/api/**': { redirect: false },
+      '/_content/**': { redirect: false },
+      '/**': { redirect: { to: '/**/', statusCode: 301 } }
+    }
+  },
   sitemap: {
     strictNuxtContentPaths: true,
     excludeAppSources: true,
