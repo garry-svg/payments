@@ -11,22 +11,27 @@ export default defineNuxtConfig({
     url: 'https://davegarry.com',
     trailingSlash: true
   },
+  content: {
+    // This makes the Content module stop 404-ing when it sees a slash
+    trailingSlash: true
+  },
   router: {
     options: {
-      // This allows Nuxt to match both /page and /page/ to the same file
-      // which stops the "flicker" because Nuxt won't force-strip the slash
+      // Tell the router that slashes are "correct"
       trailingSlash: true,
+      // Tell the router NOT to be picky. This stops the "No match found" errors.
       strict: false
     }
   },
   nitro: {
     prerender: {
       crawlLinks: true,
-      failOnError: false, // Prevents the build from crashing
+      failOnError: false,
       routes: ['/sitemap.xml', '/']
     }
   },
   sitemap: {
+    // This ensures your sitemap.xml stays alive and correct
     trailingSlash: true
   }
 })
