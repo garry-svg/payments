@@ -1,9 +1,6 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
-  future: {
-    compatibilityVersion: 4
-  },
-  devtools: { enabled: true },
+  future: { compatibilityVersion: 4 },
   modules: [
     '@nuxt/content',
     '@nuxtjs/tailwindcss',
@@ -15,36 +12,31 @@ export default defineNuxtConfig({
     name: 'Dave Garry - Financial Messaging & Technologies',
     trailingSlash: true
   },
-  runtimeConfig: {
-    public: {
-      apiBase: process.env.API_BASE || 'https://backend-latest-o6as.onrender.com'
-    }
+  // ADD THIS CONTENT BLOCK
+  content: {
+    // This tells Nuxt Content to ignore trailing slashes when matching files
+    trailingSlash: true
   },
   router: {
     options: {
       trailingSlash: true,
-      // Change strict to false to let the crawler find pages
-      // regardless of whether they have a slash or not during build
+      // Change strict to FALSE.
+      // This stops the "No match found" warning because it allows
+      // the router to resolve /path and /path/ to the same component.
       strict: false
     }
   },
   nitro: {
     prerender: {
-      crawlLinks: true,
-      // CRITICAL: This stops the build from failing when the crawler hits a 404
+      crawlLinks: true, // You can turn this back on now
       failOnError: false,
       routes: ['/', '/blog', '/sitemap.xml']
     }
   },
   sitemap: {
     strictNuxtContentAds: true,
-    sources: [
-      '/api/sitemap-urls'
-    ],
-    exclude: [
-      '/blog/output/posts/**',
-      '/_content/**'
-    ],
-    trailingSlash: true
+    trailingSlash: true,
+    sources: ['/api/sitemap-urls'],
+    exclude: ['/blog/output/posts/**', '/_content/**']
   }
 })
