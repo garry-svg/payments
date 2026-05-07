@@ -11,53 +11,39 @@ export default defineNuxtConfig({
     '@nuxtjs/sitemap'
   ],
   site: {
-    url: 'https://davegarry.com/',
-    name: 'Dave Garry - Financial Messaging & Technologies'
+    // Remove the trailing slash from the base URL here
+    url: 'https://davegarry.com',
+    name: 'Dave Garry - Financial Messaging & Technologies',
+    trailingSlash: true // This is the master switch for the sitemap module
   },
   runtimeConfig: {
     public: {
       apiBase: process.env.API_BASE || 'https://backend-latest-o6as.onrender.com'
     }
   },
-  content: {
-    highlight: {
-      theme: 'github-dark',
-      preload: ['json', 'xml', 'javascript', 'typescript', 'bash', 'yaml', 'markdown']
-    }
-  },
   router: {
     options: {
-      trailingSlash: true
+      trailingSlash: true,
+      strict: true // This forces Nuxt to treat /path and /path/ differently
     }
   },
   nitro: {
-    routeRules: {
-      '/': { prerender: true },
-      '/_nuxt/**': { redirect: false },
-      '/**/*.**': { redirect: false },
-      '/api/**': { redirect: false },
-      '/_content/**': { redirect: false },
-      '/**': { redirect: { to: '/**/', statusCode: 301 } }
+    // We only keep the specific routeRules that don't conflict with content
+    prerender: {
+      crawlLinks: true,
+      routes: ['/sitemap.xml']
     }
   },
   sitemap: {
-    strictNuxtContentPaths: true,
-    excludeAppSources: true,
-    disableContentIdx: true,
-    // Keep this 0 in dev if you're making changes,
-    // but you can remove it or set it higher for production.
-    cacheMaxAgeSeconds: 0,
-    autoLastmod: false,
-    defaults: {
-      trailingSlash: true
-    },
+    strictNuxtContentAds: true,
     sources: [
       '/api/sitemap-urls'
     ],
     exclude: [
       '/blog/output/posts/**',
       '/_content/**'
-    ]
-    // Removed hooks: sitemap:resolved because your Nitro plugin handles it now!
+    ],
+    // This helper ensures every link in the XML gets a slash automatically
+    trailingSlash: true
   }
 })
