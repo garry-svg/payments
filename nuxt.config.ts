@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   },
   router: {
     options: {
-      trailingSlash: true,
+      trailingSlash: false,
       // Change strict to FALSE.
       // This stops the "No match found" warning because it allows
       // the router to resolve /path and /path/ to the same component.
