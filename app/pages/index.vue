@@ -55,7 +55,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- JSON Formatter -->
-        <NuxtLink to="/utilities" class="group flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-2xl hover:border-indigo-300 hover:shadow-md transition-all">
+        <NuxtLink to="/utilities?tool=json-fmt" class="group flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-2xl hover:border-indigo-300 hover:shadow-md transition-all">
           <div class="p-3 bg-slate-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
           </div>
@@ -66,7 +66,7 @@
         </NuxtLink>
 
         <!-- XML Formatter -->
-        <NuxtLink to="/utilities" class="group flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-2xl hover:border-indigo-300 hover:shadow-md transition-all">
+        <NuxtLink to="/utilities?tool=xml-fmt" class="group flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-2xl hover:border-indigo-300 hover:shadow-md transition-all">
           <div class="p-3 bg-slate-50 text-violet-600 rounded-xl group-hover:bg-violet-600 group-hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
           </div>
@@ -77,7 +77,7 @@
         </NuxtLink>
 
         <!-- Base 64 Encoder -->
-        <NuxtLink to="/utilities" class="group flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-2xl hover:border-indigo-300 hover:shadow-md transition-all">
+        <NuxtLink to="/utilities?tool=b64-enc" class="group flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-2xl hover:border-indigo-300 hover:shadow-md transition-all">
           <div class="p-3 bg-slate-50 text-sky-600 rounded-xl group-hover:bg-sky-600 group-hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
           </div>

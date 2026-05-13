@@ -102,10 +102,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
+const route = useRoute()
 
 // Tool Definitions
 const tools = [
@@ -145,6 +146,14 @@ const tools = [
 
 // State Management
 const activeToolId = ref('xml-fmt')
+
+onMounted(() => {
+  const toolFromQuery = route.query.tool as string
+  if (toolFromQuery && tools.some(t => t.id === toolFromQuery)) {
+    activeToolId.value = toolFromQuery
+  }
+})
+
 const activeTool = computed(() => tools.find(t => t.id === activeToolId.value))
 
 const buffer = ref('')
