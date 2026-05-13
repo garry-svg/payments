@@ -35,5 +35,11 @@ export default defineNuxtConfig({
       autoSubfolderIndex: true,
       crawlLinks: true
     }
+  },
+
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.API_BASE || ''
+    }
   }
 })
