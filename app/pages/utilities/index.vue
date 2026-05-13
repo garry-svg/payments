@@ -37,9 +37,18 @@
           <div v-if="activeTool" class="flex flex-col h-full space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
             
             <header class="flex flex-col md:flex-row md:items-start justify-between gap-4">
-              <div>
+              <div class="flex-grow">
                 <h2 class="text-2xl font-bold text-slate-900 tracking-tight mb-1">{{ activeTool.name }}</h2>
                 <p class="text-slate-500 max-w-xl leading-relaxed text-sm">{{ activeTool.description }}</p>
+                
+                <!-- JSON Options -->
+                <div v-if="activeToolId === 'json-fmt'" class="mt-4 flex items-center gap-2">
+                  <label class="relative inline-flex items-center cursor-pointer group">
+                    <input type="checkbox" v-model="autoParseStringified" class="sr-only peer">
+                    <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                    <span class="ms-3 text-xs font-bold text-slate-500 group-hover:text-slate-900 transition-colors uppercase tracking-wider">Auto_Parse_Strings</span>
+                  </label>
+                </div>
               </div>
               
               <!-- Action Button Row -->
@@ -160,6 +169,7 @@ const buffer = ref('')
 const currentError = ref<string | null>(null)
 const isLoading = ref(false)
 const isCopied = ref(false)
+const autoParseStringified = ref(false)
 
 // Reset errors when switching tools but keep buffer optionally? 
 // User requested resetting unified workspace to empty string on Clear_Buffer.
@@ -178,6 +188,36 @@ async function copyResult() {
   await navigator.clipboard.writeText(buffer.value)
   isCopied.value = true
   setTimeout(() => { isCopied.value = false }, 2000)
+}
+
+function expandStringifiedJson(obj: any): any {
+  if (!obj || typeof obj !== 'object') return obj
+  
+  const targetKeys = ['data', 'payload']
+  
+  // Handle arrays
+  if (Array.isArray(obj)) {
+    return obj.map(item => expandStringifiedJson(item))
+  }
+
+  const newObj = { ...obj }
+  
+  for (const key in newObj) {
+    if (targetKeys.includes(key) && typeof newObj[key] === 'string') {
+      try {
+        const trimmed = newObj[key].trim()
+        if ((trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
+          newObj[key] = expandStringifiedJson(JSON.parse(newObj[key]))
+        }
+      } catch (e) {
+        // Not valid JSON, keep as is
+      }
+    } else if (newObj[key] && typeof newObj[key] === 'object') {
+      newObj[key] = expandStringifiedJson(newObj[key])
+    }
+  }
+  
+  return newObj
 }
 
 // Unified Action Handler
@@ -200,9 +240,20 @@ async function processToolAction() {
       buffer.value = data
     } 
     else if (activeToolId.value === 'json-fmt') {
+      let body: any = buffer.value
+      
+      if (autoParseStringified.value) {
+        try {
+          const parsed = JSON.parse(buffer.value)
+          body = expandStringifiedJson(parsed)
+        } catch (e) {
+          // If local parsing fails, let the backend handle the raw input
+        }
+      }
+
       const data = await $fetch<any>(`${apiBase}/api/v1/format/json`, {
         method: 'POST',
-        body: buffer.value,
+        body: body,
         headers: { 'Content-Type': 'application/json' }
       })
       buffer.value = typeof data === 'string' ? data : JSON.stringify(data, null, 2)
