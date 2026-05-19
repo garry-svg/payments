@@ -53,11 +53,25 @@
               
               <!-- Action Button Row -->
               <div class="flex items-center gap-3 flex-shrink-0 pt-1">
+                <input
+                  type="file"
+                  ref="fileInput"
+                  class="hidden"
+                  accept=".xml,.json,.txt"
+                  @change="handleFileUpload"
+                />
                 <button 
                   @click="clearBuffer"
                   class="px-5 py-2 text-sm font-bold text-slate-400 hover:text-slate-900 border border-slate-200 rounded-xl transition-all"
                 >
                   Clear_Buffer
+                </button>
+                <button 
+                  @click="triggerFileUpload"
+                  class="px-5 py-2 text-sm font-bold text-slate-400 hover:text-slate-900 border border-slate-200 rounded-xl transition-all flex items-center gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  Upload_File
                 </button>
                 <button 
                   @click="processToolAction"
@@ -155,6 +169,7 @@ const tools = [
 
 // State Management
 const activeToolId = ref('xml-fmt')
+const fileInput = ref<HTMLInputElement | null>(null)
 
 onMounted(() => {
   const toolFromQuery = route.query.tool as string
@@ -172,8 +187,6 @@ const isCopied = ref(false)
 const autoParseStringified = ref(false)
 
 // Reset errors when switching tools but keep buffer optionally? 
-// User requested resetting unified workspace to empty string on Clear_Buffer.
-// Usually switching tools might preserve buffer if they are related, but here they are different.
 watch(activeToolId, () => {
   currentError.value = null
 })
@@ -181,6 +194,29 @@ watch(activeToolId, () => {
 function clearBuffer() {
   buffer.value = ''
   currentError.value = null
+}
+
+function triggerFileUpload() {
+  fileInput.value?.click()
+}
+
+function handleFileUpload(event: Event) {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    buffer.value = e.target?.result as string
+    currentError.value = null
+  }
+  reader.onerror = () => {
+    currentError.value = 'Failed to read file'
+  }
+  reader.readAsText(file)
+
+  // Reset input value to allow selecting the same file again
+  target.value = ''
 }
 
 async function copyResult() {
