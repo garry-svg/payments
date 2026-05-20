@@ -72,6 +72,28 @@ if (post.value) {
     ogImage: post.value.image ? `https://davegarry.com${post.value.image.startsWith('/') ? '' : '/'}${post.value.image}` : undefined,
     twitterCard: 'summary_large_image',
   })
+
+  // Add JSON-LD Schema
+  useHead({
+    script: [
+      {
+        type: 'application/ld+json',
+        children: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'TechArticle',
+          headline: post.value.title,
+          description: post.value.description,
+          image: post.value.image ? `https://davegarry.com${post.value.image.startsWith('/') ? '' : '/'}${post.value.image}` : undefined,
+          datePublished: post.value.date,
+          author: {
+            '@type': 'Person',
+            name: 'Dave Garry',
+            url: 'https://davegarry.com'
+          }
+        })
+      }
+    ]
+  })
 }
 </script>
 

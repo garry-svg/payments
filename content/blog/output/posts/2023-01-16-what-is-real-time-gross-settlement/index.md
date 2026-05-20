@@ -1,6 +1,7 @@
 ---
-title: "What is Gross Settlement?"
+title: "What is Real-Time Gross Settlement (RTGS)? Definition & Examples"
 date: 2023-01-16
+description: "Understand Real-Time Gross Settlement (RTGS) systems like TARGET2, FedWire, and CHAPS. Learn how high-value payments are settled instantly and individually."
 categories: 
   - "rtgs"
 ---

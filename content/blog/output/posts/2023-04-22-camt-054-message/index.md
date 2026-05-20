@@ -1,6 +1,7 @@
 ---
-title: "Camt.054 Message"
+title: "ISO 20022 Camt.054 Message Guide: XML Examples & Format"
 date: 2023-04-22
+description: "A detailed guide to the ISO 20022 Camt.054 Bank-to-Customer Debit/Credit Notification message. Learn about its structure, XML format, and usage in SEPA."
 categories: 
   - "iso20022"
   - "sepa"

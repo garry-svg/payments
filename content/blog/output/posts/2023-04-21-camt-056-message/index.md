@@ -1,6 +1,7 @@
 ---
-title: "Camt.056 Message"
+title: "ISO 20022 Camt.056 Message: Payment Cancellation Request Guide"
 date: 2023-04-21
+description: "Guide to the ISO 20022 Camt.056 Payment Cancellation Request message. Learn how to recall credit transfers and understand the response codes."
 categories: 
   - "iso20022"
   - "sepa"

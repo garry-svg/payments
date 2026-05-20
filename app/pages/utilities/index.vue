@@ -127,6 +127,14 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
 
+useSeoMeta({
+  title: 'System Utilities - Financial Messaging Tools - Dave Garry',
+  ogTitle: 'System Utilities - Financial Messaging Tools - Dave Garry',
+  description: 'Free online tools for financial messaging engineers: XML Formatter, JSON Formatter, and Base64 converters.',
+  ogDescription: 'Free online tools for financial messaging engineers: XML Formatter, JSON Formatter, and Base64 converters.',
+  twitterCard: 'summary_large_image',
+})
+
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 const route = useRoute()

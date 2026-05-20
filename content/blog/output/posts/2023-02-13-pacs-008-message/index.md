@@ -1,6 +1,7 @@
 ---
-title: "Pacs.008 Message"
+title: "ISO 20022 Pacs.008 Message: Sample XML & Format Guide"
 date: 2023-02-13
+description: "A comprehensive guide to the ISO 20022 Pacs.008 Financial Institution to Financial Institution Customer Credit Transfer message. View XML samples and format details."
 categories: 
   - "iso-20022"
   - "iso20022"

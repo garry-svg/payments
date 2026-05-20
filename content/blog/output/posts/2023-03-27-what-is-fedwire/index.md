@@ -1,6 +1,7 @@
 ---
-title: "What is FedWire?"
+title: "What is FedWire Funds Service? US RTGS System Explained"
 date: 2023-03-27
+description: "A technical overview of the FedWire Funds Service, the US Real-Time Gross Settlement (RTGS) system. Learn how it works, its participants, and its role in fintech."
 categories: 
   - "rtgs"
 ---

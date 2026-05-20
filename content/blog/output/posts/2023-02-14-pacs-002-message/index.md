@@ -1,6 +1,7 @@
 ---
-title: "Pacs.002 Message"
+title: "ISO 20022 Pacs.002 Message: Payment Status Report Guide"
 date: 2023-02-14
+description: "Learn about the ISO 20022 Pacs.002 Payment Status Report message. Understand its role in tracking credit transfers, direct debits, and rejections."
 categories: 
   - "iso20022"
 ---

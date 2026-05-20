@@ -75,6 +75,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+useSeoMeta({
+  title: 'Engineering Log - Dave Garry',
+  ogTitle: 'Engineering Log - Dave Garry',
+  description: 'A collection of technical articles on financial messaging, ISO 20022, and software architecture.',
+  ogDescription: 'A collection of technical articles on financial messaging, ISO 20022, and software architecture.',
+  twitterCard: 'summary_large_image',
+})
+
 // Fetch all blog collection data ordered by date
 const { data: posts } = await useAsyncData('blog-posts', () => 
   queryCollection('blog')

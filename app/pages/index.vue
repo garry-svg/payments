@@ -181,6 +181,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+useSeoMeta({
+  title: 'Dave Garry - Financial Messaging & Technologies',
+  ogTitle: 'Dave Garry - Financial Messaging & Technologies',
+  description: 'Engineering log and technical utilities for financial messaging systems, ISO 20022 standards, and modern fintech architecture.',
+  ogDescription: 'Engineering log and technical utilities for financial messaging systems, ISO 20022 standards, and modern fintech architecture.',
+  ogImage: 'https://davegarry.com/images/dave-garry.jpg',
+  twitterCard: 'summary_large_image',
+})
+
 const { data: posts } = await useAsyncData('recent-posts', () => 
   queryCollection('blog')
     .order('date', 'DESC')
