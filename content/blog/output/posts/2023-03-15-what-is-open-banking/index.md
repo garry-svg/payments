@@ -1,6 +1,7 @@
 ---
 title: "What is Open Banking?"
 date: 2023-03-15
+description: "Open Banking empowers consumers by giving third-party providers secure access to financial data. Learn how APIs are revolutionizing banking services and payments."
 ---
 
 Open Banking allows banks and registered third party vendors access consumers financial data as long as they have the consumers explicit consent. By doing so, it allows non-banks offer banking functionality.

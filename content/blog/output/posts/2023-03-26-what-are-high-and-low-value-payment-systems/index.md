@@ -1,6 +1,7 @@
 ---
 title: "What are High and Low Value Payment Systems?"
 date: 2023-03-26
+description: "Banks use different streams for high-value interbank transfers and low-value retail payments. Learn the differences between RTGS systems and deferred settlement."
 ---
 
 ## Overview

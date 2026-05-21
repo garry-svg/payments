@@ -1,6 +1,7 @@
 ---
 title: "What is Net Settlement?"
 date: 2023-03-22
+description: "Net settlement streamlines banking by offsetting debits and credits at the end of the day. Explore how bilateral and multilateral netting reduce systemic risk."
 ---
 
 In net settlement, a bank nets transactions at the end of the day, whereas in gross settlement, it happens instantaneously

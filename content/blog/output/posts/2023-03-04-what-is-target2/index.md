@@ -1,6 +1,7 @@
 ---
 title: "What is TARGET2?"
 date: 2023-03-04
+description: "TARGET2 is the Eurozone's premier RTGS system for real-time euro payments. Understand how it enables central and commercial banks to move money across Europe."
 categories: 
   - "rtgs"
 ---

@@ -1,11 +1,13 @@
 ---
 title: "How is the ISO 20022 standard defined?"
 date: 2023-03-31
+description: "ISO 20022 creates a common language for global payments. This guide explains its three layers: business concepts, logical models, and XML physical syntax."
 categories: 
   - "iso20022"
 ---
 
-The financial industry uses different terms and different message formats across to describe payment processes. This leads to barriers in facilitating payment integration. ISO 20022 aims to define common payment business processes and consistent message standards to ensure financial institutions have a common understanding of payment information exchanged. The ISO 20022 standard is defined as individual 3 layers:
+The financial industry uses different terms and different message formats across to describe payment processes.
+ This leads to barriers in facilitating payment integration. ISO 20022 aims to define common payment business processes and consistent message standards to ensure financial institutions have a common understanding of payment information exchanged. The ISO 20022 standard is defined as individual 3 layers:
 
 - Business Concepts
 

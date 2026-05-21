@@ -1,6 +1,7 @@
 ---
 title: "What is PSD2?"
 date: 2023-03-17
+description: "PSD2 is the EU law driving Open Banking innovation. Discover how it regulates financial data access, enhances security, and protects consumers across Europe."
 categories: 
   - "psd2"
 ---

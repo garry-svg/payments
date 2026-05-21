@@ -1,6 +1,7 @@
 ---
 title: "Pain.008 Message"
 date: 2023-02-11
+description: "Pain.008 is the initiation message for SEPA Direct Debits. Understand its role in requesting fund collections and explore its essential XML building blocks."
 categories: 
   - "iso20022"
 ---

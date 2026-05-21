@@ -1,6 +1,7 @@
 ---
 title: "Camt.052 Message"
 date: 2023-04-30
+description: "Camt.052 provides intraday account reports, giving customers real-time visibility into transactions. Explore its building blocks and XML message structure."
 categories: 
   - "iso-20022"
 ---

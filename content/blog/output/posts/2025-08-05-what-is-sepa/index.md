@@ -1,6 +1,7 @@
 ---
 title: "What is SEPA?"
 date: 2025-08-05
+description: "SEPA simplifies Euro transfers across 41 countries. Learn about SCT, SDD, and how this single market for payments reduces costs and promotes integration."
 categories: 
   - "sepa"
 tags: 

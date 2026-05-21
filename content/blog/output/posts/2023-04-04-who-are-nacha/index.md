@@ -1,6 +1,7 @@
 ---
 title: "Who are Nacha?"
 date: 2023-04-04
+description: "Nacha governs the ACH network in the US, setting the rules for domestic electronic payments. Learn about its role in compliance, enforcement, and file formats."
 categories: 
   - "ach"
 ---

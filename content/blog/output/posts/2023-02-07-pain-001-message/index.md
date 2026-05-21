@@ -1,6 +1,7 @@
 ---
 title: "Pain.001 Message"
 date: 2023-02-07
+description: "The Pain.001 message is the first step in a SEPA Credit Transfer. This guide breaks down its XML structure, building blocks, and key payment initiation elements."
 categories: 
   - "iso20022"
 ---

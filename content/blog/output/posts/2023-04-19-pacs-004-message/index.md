@@ -1,6 +1,7 @@
 ---
 title: "Pacs.004 Message"
 date: 2023-04-19
+description: "The Pacs.004 message is used by banks to return settled payments. Understand its building blocks, key identifiers like UETR, and common reasons for returns."
 ---
 
 ## Overview

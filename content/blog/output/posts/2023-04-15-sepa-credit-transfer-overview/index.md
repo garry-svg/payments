@@ -1,6 +1,7 @@
 ---
 title: "SEPA Credit Transfer Overview"
 date: 2023-04-15
+description: "A SEPA Credit Transfer (SCT) is the standard for Euro payments. Explore the actors, message types, and the ISO 20022 framework that enables smooth transfers."
 categories: 
   - "iso20022"
   - "sepa"

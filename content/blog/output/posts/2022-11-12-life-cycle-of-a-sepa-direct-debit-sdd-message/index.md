@@ -1,6 +1,7 @@
 ---
 title: "Life-cycle of a SEPA Direct Debit (SDD) Message"
 date: 2022-11-12
+description: "Learn about the SEPA Direct Debit (SDD) lifecycle, including the Core and B2B schemes, and the message flow between debtor and creditor agents in the payment chain."
 categories: 
   - "sepa"
 tags: 
@@ -33,3 +34,10 @@ The following describes the flow of messages between debtor and creditor
 - **Pain.008** \-  direct debit initiation request.
 
 - **Pacs.002** - Status Report message – is sent by an instructed agent to the previous party in the payment chain. It is used to inform this party about the positive or negative outcome of a payment instruction.
+p to SEPA?
+
+All banks operating within the Single Euro Payments Area must adhere to the SEPA payment standard which conforms to the ISO 20022 standard. All SEPA payment messages are compliant with ISO 20022. However SEPA payment messages will be more restrictive in applicable business rules than their ISO 20022 counterparts.
+
+## What is the difference between ISO 15022 and ISO 20022?
+
+ISO 15022 is an ISO standard for securities messaging used in transactions between financial institutions across the [SWIFT](https://davegarry.com/who-are-swift/) network. ISO 20022 will replace the ISO 15022 standard.

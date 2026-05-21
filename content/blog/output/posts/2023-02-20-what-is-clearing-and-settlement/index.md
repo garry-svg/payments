@@ -1,6 +1,7 @@
 ---
 title: "What is Clearing And Settlement?"
 date: 2023-02-20
+description: "Clearing and settlement are the backbone of financial transactions. Learn how interbank networks reconcile orders and finalize fund transfers between banks."
 categories: 
   - "iso20022"
   - "sepa"

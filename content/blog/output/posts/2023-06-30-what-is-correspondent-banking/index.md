@@ -1,6 +1,7 @@
 ---
 title: "What is Correspondent banking?"
 date: 2023-06-30
+description: "Correspondent banking connects unconnected financial institutions globally. Learn how Nostro and Vostro accounts facilitate international fund transfers and services."
 ---
 
 Correspondent banking refers to any financial institution (correspondent bank) providing services to other banks (respondent banks).  A respondent banks can gain access to foreign financial markets by using correspondent banks, rather than setting up branches overseas.

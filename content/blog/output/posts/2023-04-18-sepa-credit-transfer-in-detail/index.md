@@ -1,6 +1,7 @@
 ---
 title: "SEPA Credit Transfer in Detail"
 date: 2023-04-18
+description: "Dive deep into the SEPA Credit Transfer (SCT) flow. Learn how PAIN, PACS, and CAMT messages interact to ensure secure and efficient interbank euro payments."
 categories: 
   - "iso20022"
   - "sct"

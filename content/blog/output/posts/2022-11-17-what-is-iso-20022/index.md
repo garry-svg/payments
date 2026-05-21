@@ -1,6 +1,7 @@
 ---
 title: "What is ISO 20022?"
 date: 2022-11-17
+description: "ISO 20022 is the global standard for financial messaging. Learn about its five key areas, its role in SEPA, and the benefits of enriched data for payments."
 categories: 
   - "iso20022"
 tags: 

@@ -1,6 +1,7 @@
 ---
 title: "Pain.002 Message"
 date: 2023-02-15
+description: "The Pain.002 message provides vital payment status reports in the ISO 20022 framework. Learn how it communicates success or failure back to the initiator."
 categories: 
   - "iso20022"
   - "sepa"

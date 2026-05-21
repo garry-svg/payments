@@ -1,6 +1,7 @@
 ---
 title: "Camt.029 Message"
 date: 2023-04-26
+description: "The Camt.029 message is a negative response to a payment recall. Learn how it functions as a resolution of investigation within the ISO 20022 framework."
 categories: 
   - "iso-20022"
 ---

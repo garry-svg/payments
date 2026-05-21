@@ -1,6 +1,7 @@
 ---
 title: "What is CHAPS?"
 date: 2023-03-03
+description: "CHAPS is the UK's high-value payment system for Sterling. Learn how this RTGS system, operated by the Bank of England, ensures secure, same-day settlement."
 categories: 
   - "rtgs"
 ---

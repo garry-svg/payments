@@ -1,11 +1,13 @@
 ---
 title: "What is the ACH Network?"
 date: 2023-04-09
+description: "The ACH network is the foundation of US retail payments. Discover how it processes millions of domestic debits and credits through batching and clearing houses."
 categories: 
   - "ach"
 ---
 
-The ACH (automated clearing house) network is a payments network in the United States used to process low-value domestic payments. Two different operators run the ACH network:
+The ACH (automated clearing house) network is a payments network in the United States used to process low-value domestic payments.
+ Two different operators run the ACH network:
 
 - Electronic Payment Network (EPN). Run by the [Clearing House](https://davegarry.com/who-are-the-clearing-house/).
 

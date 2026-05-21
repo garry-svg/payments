@@ -1,6 +1,7 @@
 ---
 title: "Who are The Clearing House?"
 date: 2023-03-01
+description: "The Clearing House (TCH) is a pillar of the US financial system, managing CHIPS, RTP, and the ACH network. Explore how it settles trillions of dollars daily."
 categories: 
   - "eba"
 tags: 

@@ -1,6 +1,7 @@
 ---
 title: "Who are EBA Clearing?"
 date: 2023-02-28
+description: "EBA Clearing is a major European clearing house operating systems like EURO1 and STEP2. Discover its role in processing billions of euro transactions annually."
 categories: 
   - "eba"
 ---

@@ -1,6 +1,7 @@
 ---
 title: "Pacs.003 Message"
 date: 2023-02-16
+description: "Pacs.003 is the interbank message for customer direct debits. Discover how it functions between financial institutions to facilitate SEPA fund collections."
 categories: 
   - "iso20022"
   - "sepa"

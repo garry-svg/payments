@@ -1,6 +1,7 @@
 ---
 title: "What is Cross-border Payments and Reporting Plus (CBPR+)"
 date: 2023-07-07
+description: "CBPR+ defines the SWIFT network's transition to ISO 20022 for cross-border payments. Understand the rollout timeline and how MT messages map to the MX format."
 ---
 
 CBPR+ is an acronym which stands for Cross-border payments and reporting plus. It defines how the [SWIFT](https://davegarry.com/who-are-swift/) network uses [ISO 20022](https://davegarry.com/what-is-iso-20022/) messages for cross-border payments and cash reporting.

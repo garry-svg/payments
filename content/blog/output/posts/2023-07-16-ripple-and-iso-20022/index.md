@@ -1,6 +1,7 @@
 ---
 title: "Ripple and ISO 20022"
 date: 2023-07-16
+description: "Ripple is leveraging blockchain and ISO 20022 to revolutionize cross-border payments. Explore its adoption of the global standard and the role of XRP Ledger."
 categories: 
   - "iso-20022"
   - "ripple"

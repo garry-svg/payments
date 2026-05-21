@@ -1,6 +1,7 @@
 ---
 title: "Who are SWIFT?"
 date: 2023-02-03
+description: "Explore the role of SWIFT in global finance. Learn about its secure messaging network, SWIFTNet protocols, and the financial messaging standards it maintains."
 categories: 
   - "swift"
 ---

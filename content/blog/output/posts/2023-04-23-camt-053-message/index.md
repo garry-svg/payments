@@ -1,6 +1,7 @@
 ---
 title: "Camt.053 Message"
 date: 2023-04-23
+description: "Camt.053 is the ISO 20022 standard for bank-to-customer account statements. Discover its XML structure, reporting elements, and how it details transactions."
 categories: 
   - "iso-20022"
 ---
