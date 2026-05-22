@@ -11,9 +11,10 @@ async function handleFormat() {
   loading.value = true;
   error.value = null;
   try {
+    const body = expandStringifiedJson(input.value);
     const data = await $fetch<any>(`${config.public.apiBase}/api/format/json`, {
       method: 'POST',
-      body: input.value,
+      body: body,
       headers: {
         'Content-Type': 'application/json'
       }

@@ -234,36 +234,6 @@ async function copyResult() {
   setTimeout(() => { isCopied.value = false }, 2000)
 }
 
-function expandStringifiedJson(obj: any): any {
-  if (!obj || typeof obj !== 'object') return obj
-  
-  const targetKeys = ['data', 'payload']
-  
-  // Handle arrays
-  if (Array.isArray(obj)) {
-    return obj.map(item => expandStringifiedJson(item))
-  }
-
-  const newObj = { ...obj }
-  
-  for (const key in newObj) {
-    if (targetKeys.includes(key) && typeof newObj[key] === 'string') {
-      try {
-        const trimmed = newObj[key].trim()
-        if ((trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
-          newObj[key] = expandStringifiedJson(JSON.parse(newObj[key]))
-        }
-      } catch (e) {
-        // Not valid JSON, keep as is
-      }
-    } else if (newObj[key] && typeof newObj[key] === 'object') {
-      newObj[key] = expandStringifiedJson(newObj[key])
-    }
-  }
-  
-  return newObj
-}
-
 // Unified Action Handler
 async function processToolAction() {
   if (!buffer.value.trim()) return
@@ -288,8 +258,7 @@ async function processToolAction() {
       
       if (autoParseStringified.value) {
         try {
-          const parsed = JSON.parse(buffer.value)
-          body = expandStringifiedJson(parsed)
+          body = expandStringifiedJson(buffer.value)
         } catch (e) {
           // If local parsing fails, let the backend handle the raw input
         }
