@@ -35,7 +35,7 @@ While schema validation guarantees structural compliance, the real complexity li
 
 Historically, these rules originate as plain-English definitions published in dense Message Implementation Guides (MIGs). The fundamental challenge of payment engineering is bridging the gap between descriptive, text-based business requirements and the executing validation code within a high-performance payment gateway. This programmatic formalization enforces complex cross-field validation, such as:
 *   **Intermediary Bank Alignment:** Ensuring that if specific regional routing codes are used, the corresponding clearing system member identifier is populated and structurally aligned.
-*   **Operational status matching:** Forcing the final characters of routing identifiers to align precisely with the operational profile of the participant bank.
+*   **Operational Status Matching:** Forcing the final characters of routing identifiers to align precisely with the operational profile of the participant bank.
 *   **Value-Date Restrictions:** Restricting currency transaction dates based on target system calendars and country-specific settlement holidays.
 
 ---
@@ -46,14 +46,16 @@ Traditional validation engines are deterministic, precise, and literal. When a m
 
 A standard engine failure lacks context, outputting cryptic technical codes and pattern mismatch failures:
 
-```text
+
+<pre style="background-color: #0f172a; color: #f8fafc; padding: 1.25rem; border-radius: 0.375rem; font-family: monospace; font-size: 0.875rem; line-height: 1.5; overflow-x: auto; border: 1px solid #334155;">
 Error: [Parser-Violation] Validation failed at element path:
 /Document/FIToFICstmrCdtTrf/CdtTrfTxInf/DbtrAgt/FinInstnId/ClrSysMmbId/MmbId
 Reason: cvc-pattern-valid: Value 'CH-12090' is not facet-valid with respect to pattern 
 for 'Min5Max35NumericText'. Exception Code: 0x902F1A-ERR
-```
+</pre>
 
-In this scenario, a payment operations specialist or client developer is forced to cross-reference the raw path, the system exception code, and the 400-page Message Implementation Guide. They must manually determine that the error occurred because the clearing identifier was formatted with an alphabetical prefix ('CH-'), whereas this specific regional clearing network requires an exclusively numeric string. This manual diagnostic loop introduces significant delays, stalling critical Straight-Through Processing (STP) pipelines.
+
+In this scenario, a payment operations specialist or client developer is forced to cross-reference the raw path, the system exception code, and the 400-page Message Implementation Guide. They must manually determine that the error occurred because the clearing identifier was formatted with an alphabetical prefix (`CH-`), whereas this specific regional clearing network requires an exclusively numeric string. This manual diagnostic loop introduces significant delays, stalling critical Straight-Through Processing (STP) pipelines.
 
 ---
 
@@ -65,10 +67,15 @@ The translation layer functions by assembling a closed-loop context containing t
 
 ### Operational Prompt/Response Translation
 
-```text
-====================================== DETERMINISTIC INPUT ======================================
-[RAW ERROR LOG]:
-Error Code: 0x2088-VAL-ERR at path /Document/FIToFICstmrCdtTrf/CdtTrfTxInf/IntrBkSttlmAmt
+To demonstrate how the translation layer operates, consider the following two-step sequence showing the raw deterministic input ingested by the model and the subsequent structured output returned to the client portal or operations queue.
+
+### Step 1: The Deterministic Input Payload
+
+The validation engine packages the exact technical exception, the sanitized message snippet, and the relevant business rule definition from the Message Implementation Guide into a single, closed-loop prompt context:
+
+<pre style="background-color: #0f172a; color: #f8fafc; padding: 1.25rem; border-radius: 0.375rem; font-family: monospace; font-size: 0.875rem; line-height: 1.5; overflow-x: auto; border: 1px solid #334155;">
+[RAW ERROR LOG]: 
+Error Code: 0x2088-VAL-ERR at path /Document/PaymentTransaction/SettlementDetails/IntrBkSttlmAmt
 Details: cvc-pattern-valid: Value '25000' is not facet-valid with respect to pattern.
 
 [MIG PLAIN-ENGLISH RULE DEFINITION]:
@@ -78,17 +85,16 @@ the decimal fraction separator is mandatory, and the amount must include exactly
 decimal places (e.g., '25000.00' instead of '25000')."
 
 [FAILING MESSAGE SNIPPET]:
-<IntrBkSttlmAmt Ccy="NZD">25000</IntrBkSttlmAmt>
-=================================================================================================
+&lt;IntrBkSttlmAmt Ccy="NZD"&gt;25000&lt;/IntrBkSttlmAmt&gt;
+</pre>
 
-                                                │
-                                                ▼
-                                    [Grounded AI Translator]
-                                                │
-                                                ▼
+### Step 2: The Grounded AI-Generated Output
 
-===================================== AI-GENERATED OUTPUT ======================================
+Based strictly on the deterministic inputs provided above, the translator synthesizes the contextual information to deliver a clean, clear explanation and a step-by-step resolution playbook:
+
+<pre style="background-color: #0f172a; color: #f8fafc; padding: 1.25rem; border-radius: 0.375rem; font-family: monospace; font-size: 0.875rem; line-height: 1.5; overflow-x: auto; border: 1px solid #334155;">
 STATUS: Transaction Rejected (Validation Error)
+
 DIAGNOSTIC SUMMARY: 
 Your transaction was rejected because the interbank settlement amount (IntrBkSttlmAmt) 
 value "25000" is missing the required decimal formatting.
@@ -97,10 +103,9 @@ CORRECTIVE ACTION:
 Update your integration pipeline or manual entry field to include a literal decimal 
 point and exactly two decimal places. For NZD transactions, the clearing system strictly 
 mandates this pattern.
-  • Current: <IntrBkSttlmAmt Ccy="NZD">25000</IntrBkSttlmAmt>
-  • Expected: <IntrBkSttlmAmt Ccy="NZD">25000.00</IntrBkSttlmAmt>
-=================================================================================================
-```
+  • Current:  &lt;IntrBkSttlmAmt Ccy="NZD"&gt;25000&lt;/IntrBkSttlmAmt&gt;
+  • Expected: &lt;IntrBkSttlmAmt Ccy="NZD"&gt;25000.00&lt;/IntrBkSttlmAmt&gt;
+</pre>
 
 ---
 
@@ -110,7 +115,9 @@ In core financial and banking infrastructure, predictability is paramount. The p
 
 To eliminate this risk, the explanation architecture employs a strict **"closed-book, pure grounding"** design pattern:
 
-```
+
+<pre style="background-color: #0f172a; color: #f8fafc; padding: 1.25rem; border-radius: 0.375rem; font-family: monospace; font-size: 0.875rem; line-height: 1.5; overflow-x: auto; border: 1px solid #334155;">
+
 ┌───────────────────────┐      ┌─────────────────────────┐      ┌──────────────────────────┐
 │ Deterministic Error  │      │ Literal MIG Rule Text   │      │ Failing Message Snippet │
 │ from Validation Core  │      │  from Database Cache    │      │ (Sanitized XML/JSON)     │
@@ -134,7 +141,8 @@ To eliminate this risk, the explanation architecture employs a strict **"closed-
                              │ Clear, Accurate Explanation │
                              │   & Actionable Remediation   │
                              └──────────────────────────────┘
-```
+</pre>
+
 
 By enforcing this sandbox, the AI is completely constrained. It is forbidden from drawing upon general, unverified knowledge or speculative internet documentation. Its role is strictly defined as a **context synthesizer and translator**. It reads the literal rule of the MIG, compares it against the failing message fragment, and reformats the technical syntax of the validation core into plain, authoritative English. If the necessary rule definition is missing from the database, the translator falls back to default technical strings rather than attempting to guess the policy.
 
@@ -146,7 +154,7 @@ Replacing raw, systemic exceptions with grounded explanations shifts the economi
 
 1.  **Eliminating Day-2 Operational Overhead:** When a cross-border or high-value payment is rejected, settlement teams historically spend hours searching through dense, hundreds-of-pages-long PDF documentation to guide participants or corporate clients. Grounded AI explanations turn validation errors into instant, self-service feedback loops.
 2.  **Slashed Onboarding and Certification Cycles:** Integrating a new bank participant into a regional clearing network typically takes months of repetitive testing and message debugging. Automated, hyper-specific feedback allows participant developers to self-correct in real time, reducing testing cycles from months to days.
-3.  **Improved Straight-Through Processing (STP) Rates:** By embedding the translation layer into client-facing client portals or corporate ERP integration gateways, systems can correct message formatting anomalies *before* they are sent to the core clearing networks, preventing costly rejections downstream.
+3.  **Improved Straight-Through Processing (STP) Rates:** By embedding the translation layer into client-facing portals or corporate ERP integration gateways, systems can correct message formatting anomalies *before* they are sent to the core clearing networks, preventing costly rejections downstream.
 
 ---
 

@@ -25,8 +25,8 @@
         <!-- Content -->
         <div class="prose prose-slate lg:prose-lg max-w-none 
           prose-headings:text-slate-900 prose-headings:font-bold prose-headings:tracking-tight
-          prose-a:text-indigo-600 prose-a:no-underline hover:prose-a:underline
-          prose-strong:text-slate-900 prose-code:text-indigo-600 prose-pre:bg-slate-900 prose-pre:rounded-2xl
+          prose-a:text-indigo-700 prose-a:no-underline hover:prose-a:underline
+          prose-strong:text-slate-900 prose-code:text-indigo-700 prose-pre:bg-slate-900 prose-pre:rounded-2xl
           prose-img:rounded-2xl prose-img:border prose-img:border-slate-100 prose-img:shadow-sm
           wp-content-fix">
           <ContentRenderer :value="post" />
