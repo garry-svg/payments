@@ -30,6 +30,15 @@ export default defineNuxtConfig({
     }
   },
 
+  routeRules: {
+    '/what-and-high-and-low-value-payment-systems': {
+      redirect: { to: '/what-are-high-and-low-value-payment-systems/', statusCode: 301 }
+    },
+    '/what-and-high-and-low-value-payment-systems/': {
+      redirect: { to: '/what-are-high-and-low-value-payment-systems/', statusCode: 301 }
+    }
+  },
+
   nitro: {
     prerender: {
       autoSubfolderIndex: true,

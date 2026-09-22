@@ -10,6 +10,10 @@ The beneficiary bank uses the pacs.004 message to trigger the return of a settle
 
 The pacs.004 message must identify the returned payment. The UETR (Unique End-to-end Transaction Reference) and the end-to-end-id identify the payment a pacs.004 refers to.
 
+### Role in Payment Recall Workflows
+
+In addition to unilateral returns (such as an account closed or blocked), the pacs.004 message serves as the **positive response** to an interbank payment recall initiated via [camt.056](/camt-056-message/). Under schemes such as SEPA Credit Transfer (SCT), if the beneficiary bank accepts the recall request, it transfers the funds back to the originator bank using a `pacs.004` carrying return reason code `FOCR` (*Following Cancellation Request*). If the recall cannot be fulfilled (for example, if the customer refuses or legal restrictions apply), the beneficiary bank instead sends a [camt.029](/camt-029-message/) negative resolution.
+
 ## Building Blocks of the Pacs.004
 
 Like other payment messages in [ISO20022](https://davegarry.com/what-is-iso-20022/), the pacs.004 contains 2 main parts. You can find the definition of the pacs.004 schema and its message definition report [here](https://www.iso20022.org/iso-20022-message-definitions?search=pacs.004).
