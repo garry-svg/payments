@@ -113,11 +113,11 @@ Contains the specific payment instructions targeted for recall. Under `<TxInf>` 
 
 ---
 
-## Synthetic XML Example (camt.056.001.08)
+## XML Example (camt.056.001.08)
 
 Below is a synthetic `camt.056.001.08` XML document requesting the recall of a settled credit transfer due to duplicate execution (`DUPL`), structured according to EPC115-06 Inter-PSP Implementation Guidelines.
 
-> **Verification Note:** This example specifies the target namespace `urn:iso:std:iso:20022:tech:xsd:camt.056.001.08` used by the EPC SCT scheme. Because standalone XSD packages for this specific version could not be retrieved from primary sources due to anti-bot restrictions on download archives, this snippet is provided as an illustrative structural reference rather than an independently verified XSD-validated document.
+> Illustrative XML example using the stated message version. Not independently XSD-validated; verify against the applicable schema and EPC implementation guidelines before use.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

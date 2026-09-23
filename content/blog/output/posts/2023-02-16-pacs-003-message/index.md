@@ -1,7 +1,7 @@
 ---
 title: "pacs.003 Explained: Direct Debit Flow, Fields and XML Example"
 date: 2023-02-16
-description: "A complete guide to the ISO 20022 pacs.003 interbank customer direct debit message. Learn the message flow from pain.008, mandate structures, and validated XML."
+description: "A complete guide to the ISO 20022 pacs.003 interbank customer direct debit message. Learn the message flow from pain.008, mandate structures, and XML fields."
 categories: 
   - "iso20022"
   - "sepa"
@@ -15,11 +15,11 @@ A common source of confusion in early implementations is conflating collection i
 
 ## Direct Debit Purpose and Participants
 
-A direct debit transaction requires four primary parties and an intermediary clearing network:
+A direct debit transaction typically involves four primary parties and, where interbank clearing infrastructure is used, a clearing mechanism:
 
 1. **Creditor (Payee):** The merchant, utility, or business collecting funds based on a prior contractual agreement and signed mandate.
 2. **Creditor Agent (Creditor PSP):** The bank or payment service provider holding the creditor's account and initiating the interbank collection.
-3. **Clearing and Settlement Mechanism (CSM):** The central clearing house or automated clearing house (ACH), such as [EBA CLEARING STEP2](/who-are-eba-clearing/) or regional central bank systems, that routes transactions, nets obligations, and facilitates settlement.
+3. **Clearing and Settlement Mechanism (CSM):** Clearing and settlement infrastructure, such as [EBA CLEARING STEP2](/who-are-eba-clearing/) or central bank platforms, where applicable. Routes collection instructions and facilitates clearing and settlement according to the infrastructure’s rules.
 4. **Debtor Agent (Debtor PSP):** The bank or PSP holding the account to be debited.
 5. **Debtor (Payer):** The consumer or enterprise debtor who granted the direct debit mandate.
 
@@ -129,11 +129,11 @@ Carries transaction-specific data:
 
 ---
 
-## Validated XML Example
+## XML Example (pacs.003.001.08)
 
-The following is a synthetic, complete `pacs.003.001.08` XML document representing a SEPA Core Direct Debit recurrent collection.
+The following is a synthetic `pacs.003.001.08` XML document representing a SEPA Core Direct Debit recurrent collection.
 
-> **Validation Note:** This XML instance has been tested and validated against the official ISO 20022 XML Schema Definition (`pacs.003.001.08.xsd`, target namespace `urn:iso:std:iso:20022:tech:xsd:pacs.003.001.08`) using `xmllint` and Python `lxml`. Note that technical XSD validation establishes only syntactic and structural compliance; it does not confirm business-rule adherence to the EPC SDD Rulebook.
+> This example was validated against pacs.003.001.08.xsd. XSD validation checks XML structure and data types; it does not establish compliance with EPC scheme rules.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

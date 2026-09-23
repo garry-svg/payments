@@ -95,11 +95,11 @@ When resolving an SCT Recall or RFRO, the `<TxInfAndSts>` repeating block under 
 
 ---
 
-## Synthetic XML Example (camt.029.001.09)
+## XML Example (camt.029.001.09)
 
 Below is a synthetic `camt.029.001.09` XML document rejecting an SCT recall request due to customer refusal (`CUST`), structured in accordance with EPC115-06 Inter-PSP Implementation Guidelines.
 
-> **Verification Note:** This example specifies the target namespace `urn:iso:std:iso:20022:tech:xsd:camt.029.001.09` used by the EPC SCT scheme. Because standalone XSD packages for this specific version could not be retrieved from primary sources due to anti-bot restrictions on download archives, this snippet is provided as an illustrative structural reference rather than an independently verified XSD-validated document.
+> Illustrative XML example using the stated message version. Not independently XSD-validated; verify against the applicable schema and EPC implementation guidelines before use.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
