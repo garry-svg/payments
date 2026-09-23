@@ -7,7 +7,7 @@ categories:
   - "sepa"
 ---
 
-The **camt.029** message (`RsltnOfInvstgtn` — *Resolution of Investigation*) is an ISO 20022 interbank message sent by an instructed financial institution (such as a beneficiary bank) to report the outcome, status, or conclusion of an investigation to the instructing institution.
+The **camt.029** message ('RsltnOfInvstgtn' — *Resolution of Investigation*) is an ISO 20022 interbank message sent by an instructed financial institution (such as a beneficiary bank) to report the outcome, status, or conclusion of an investigation to the instructing institution.
 
 A common simplification in payments engineering is describing camt.029 exclusively as a "negative response to a recall." While camt.029 is indeed used in schemes like [SEPA Credit Transfer (SCT)](/sepa-credit-transfer-overview/) to inform an originator bank that a payment recall has been denied, the base ISO 20022 definition is far broader. **camt.029 is a multi-purpose investigation resolution message** that resolves payment cancellations, payment modifications, claims for non-receipt, and account statement queries.
 

@@ -7,7 +7,7 @@ categories:
   - "sepa"
 ---
 
-The **pacs.003** message (`FIToFICstmrDrctDbt` — *Financial Institution to Financial Institution Customer Direct Debit*) is the core ISO 20022 XML message used between financial institutions to execute customer direct debit collections. In contrast to credit transfers where the debtor initiates a "push" payment, direct debit is a **pull payment**: the creditor's bank (creditor agent) forwards the instruction through a clearing and settlement mechanism (CSM) to collect funds directly from the debtor's bank (debtor agent).
+The **pacs.003** message ('FIToFICstmrDrctDbt' — *Financial Institution to Financial Institution Customer Direct Debit*) is the core ISO 20022 XML message used between financial institutions to execute customer direct debit collections. In contrast to credit transfers where the debtor initiates a "push" payment, direct debit is a **pull payment**: the creditor's bank (creditor agent) forwards the instruction through a clearing and settlement mechanism (CSM) to collect funds directly from the debtor's bank (debtor agent).
 
 A common source of confusion in early implementations is conflating collection instructions with cancellation requests. A pacs.003 message does not handle cancellations or payment recalls; it is strictly the interbank vehicle for executing collections authorized by a mandate.
 

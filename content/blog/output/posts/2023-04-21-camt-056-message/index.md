@@ -7,7 +7,7 @@ categories:
   - "sepa"
 ---
 
-The **camt.056** message (`FIToFIPmtCxlReq` — *Financial Institution to Financial Institution Payment Cancellation Request*) is the ISO 20022 interbank message used by an instructing financial institution to request the cancellation or recall of a previously dispatched payment instruction, such as a [pacs.008 credit transfer](/pacs-008-message/) or a pacs.009 financial institution transfer.
+The **camt.056** message ('FIToFIPmtCxlReq' — *Financial Institution to Financial Institution Payment Cancellation Request*) is the ISO 20022 interbank message used by an instructing financial institution to request the cancellation or recall of a previously dispatched payment instruction, such as a [pacs.008 credit transfer](/pacs-008-message/) or a pacs.009 financial institution transfer.
 
 A common industry misconception is viewing camt.056 as a message that reverses money. **A camt.056 never moves funds.** It is strictly an administrative request initiating an investigation between banks. Once a credit transfer has settled and posted to the beneficiary's account, funds cannot be unilaterally pulled back; settlement finality prevents automated debiting without the beneficiary's consent or formal scheme exception rules.
 
