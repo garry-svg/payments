@@ -90,11 +90,13 @@ Post-specific images must not clutter the Markdown content folder.
 
 ## 6. Toolkit Utilities & API Integration
 
-The interactive utilities (`Base64Converter.vue`, `JsonPrettyPrinter.vue`, `XmlPrettyPrinter.vue`) are placed in `app/components/tools/` and rendered on `app/pages/utilities/index.vue`.
+The interactive utilities (`Base64Converter.vue`, `JsonPrettyPrinter.vue`, `XmlPrettyPrinter.vue`, `JsonDiff.vue`, `XmlDiff.vue`) are placed in `app/components/tools/` and rendered on `app/pages/utilities/index.vue`.
 
 - **API Base URL:** Utilities perform tasks using client-side processing or backend endpoints:
   - XML Formatting: Client-side (CodeMirror 6 with syntax-aware folding & local AST formatting)
+  - XML Diff: Client-side (CodeMirror 6 with syntax-aware folding & local structural XML diff)
   - JSON Formatting: Client-side (CodeMirror 6 with syntax-aware folding & local recursive auto-parse formatting)
+  - JSON Diff: Client-side (CodeMirror 6 with AST source mapping & semantic JSON diff)
   - Base64 Conversion: `${config.public.apiBase}/api/convert/base64`
 - Maintain consistency by utilizing this runtime config for any new integration utility added to the site.
 

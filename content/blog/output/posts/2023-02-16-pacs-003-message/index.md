@@ -111,12 +111,12 @@ Carries transaction-specific data:
 * `<PmtTpInf>`: Scheme classification parameters:
   * `<SvcLvl><Cd>`: Service level code (e.g., `SEPA`).
   * `<LclInstrm><Cd>`: Local instrument code (e.g., `CORE` for consumer direct debit, or `B2B` for business-to-business).
-  * `<SeqTp>`: Sequence type: `FRST` (First collection), `RCUR` (Recurrent), `FNAL` (Final), or `OOFF` (One-off).
+  * `<SeqTp>`: Sequence type: `FRST` (First collection), `RCUR` (Recurrent), `FNAL` (Final), or `OOFF` (One-off). Note that under EPC SDD rules since November 2016, `FRST` is optional; creditors may use `RCUR` for all recurrent collections, including the initial one.
 * `<IntrBkSttlmAmt>`: The collection amount and currency (e.g., `Ccy="EUR"`).
 * `<ChrgBr>`: Charge bearer code, conventionally `SLEV` (Service Level / Shared) in SEPA.
 * `<ReqdColltnDt>`: The requested collection due date when the debtor's account should be debited.
 * `<DrctDbtTx>`: Direct debit specific details:
-  * `<MndtRltdInf>`: Mandate information:
+  * `<MndtRltdInf>`: Mandate information (mandatory under EPC SDD rules):
     * `<MndtId>`: Unique Mandate Reference (UMR) established between creditor and debtor.
     * `<DtOfSgntr>`: The date the mandate was signed by the debtor.
     * `<AmdmntInd>`: Boolean flag indicating whether mandate terms have changed since previous collection (`true` or `false`).
@@ -133,7 +133,7 @@ Carries transaction-specific data:
 
 The following is a synthetic, complete `pacs.003.001.08` XML document representing a SEPA Core Direct Debit recurrent collection.
 
-> **Validation Note:** This XML instance has been tested and validated against the official ISO 20022 XML Schema Definition (`pacs.003.001.08.xsd`, target namespace `urn:iso:std:iso:20022:tech:xsd:pacs.003.001.08`) using `xmllint` and Python `lxml`.
+> **Validation Note:** This XML instance has been tested and validated against the official ISO 20022 XML Schema Definition (`pacs.003.001.08.xsd`, target namespace `urn:iso:std:iso:20022:tech:xsd:pacs.003.001.08`) using `xmllint` and Python `lxml`. Note that technical XSD validation establishes only syntactic and structural compliance; it does not confirm business-rule adherence to the EPC SDD Rulebook.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -231,7 +231,7 @@ The following is a synthetic, complete `pacs.003.001.08` XML document representi
 </Document>
 ```
 
-If you are inspecting or reformatting raw XML payloads during integration testing, you can format and inspect your documents using our browser-based [XML Formatter Toolkit](/utilities/).
+If you are inspecting or reformatting raw XML payloads for indentation and syntax structure during integration testing, you can format your documents using our browser-based [XML Formatter Toolkit](/utilities/).
 
 ---
 
@@ -250,7 +250,7 @@ Passing schema validation is necessary, but it does **not** ensure that a messag
 
 1. **Incorrect Tag Sequencing:** The ISO 20022 XML schemas strictly enforce XML element sequence orders (`<xs:sequence>`). Placing `<UETR>` before `<TxId>` within `<PmtId>`, or placing debtor blocks before creditor blocks, triggers fatal schema validation errors.
 2. **Confusing Collection Date with Settlement Date:** `<ReqdColltnDt>` specifies the day the debtor's account is debited, while `<IntrBkSttlmDt>` defines when interbank accounts settle. In standard SEPA Direct Debit, these two dates coincide, but interbank presentation must precede the collection date according to scheme lead times.
-3. **Mishandling Sequence Types:** Sending an initial collection marked as `RCUR` instead of `FRST`, or failing to track whether a mandate was previously used, can cause debtor banks to reject the collection under strict validation rules.
+3. **Mandate Sequence Type Assumptions:** Prior to November 2016, SEPA Direct Debit required initial collections to carry the `FRST` sequence type with extended lead times. Under current EPC SDD rules, `FRST` is optional; creditors are permitted to use `RCUR` for all recurrent collections, including the initial one, and presentation lead times are harmonized to D-1 banking business day.
 4. **Mandate Amendment Errors:** When updating creditor or debtor banking details, the `<AmdmntInd>` must be set to `true`, and `<AmdmntInfDtls>` must contain the original mandate parameters. Submitting a new mandate reference without amendment flags risks being treated as an unknown or unauthorized collection.
 5. **Conflating SDD R-Transactions:** Direct debit exceptions must follow scheme-defined paths: a pre-settlement failure requires a `pacs.002` Reject, whereas a post-settlement return requires a [`pacs.004`](/pacs-004-message/). Direct debit does not use `camt.056` for customer recall requests.
 
@@ -258,5 +258,6 @@ Passing schema validation is necessary, but it does **not** ensure that a messag
 
 ## Primary References
 
-* [ISO 20022 Payments Clearing and Settlement Catalogue](https://www.iso20022.org/iso-20022-message-definitions) — Official message definitions, XSDs, and Message Definition Reports (MDR) for `pacs.003`.
-* [European Payments Council (EPC) SEPA Direct Debit Core Rulebook](https://www.europeanpaymentscouncil.eu) — Definitive specifications for Dataset DS-04 interbank collections.
+* [ISO 20022 Payments Clearing and Settlement Catalogue](https://www.iso20022.org/iso-20022-message-definitions) — Official message definitions and XML specifications for `pacs.003`.
+* [European Payments Council: SEPA Direct Debit Core Scheme Rulebook](https://www.europeanpaymentscouncil.eu/document-library/rulebooks/sepa-direct-debit-core-scheme-rulebook) — Definitive specifications for Dataset DS-04 interbank collections.
+* [European Payments Council: Press Release EPC002-15 on Optional FRST Sequence Type](https://www.europeanpaymentscouncil.eu/sites/default/files/KB/files/EPC002-15%20v%201.0%20%2826.01.2015%29%20EPC%20Press%20Release%20Publication%20SDD%20Rulebooks%20to%20Take%20Effect%20November%202016.pdf) — Rulebook decision making the first sequence type optional and harmonizing lead times.

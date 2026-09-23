@@ -8,6 +8,25 @@ export interface XmlValidationError {
   msg?: string
 }
 
+export interface XmlAstNode {
+  tag: string
+  attributes: Record<string, string>
+  children: XmlAstNode[]
+  text?: string
+  from: number
+  to: number
+}
+
+export type XmlDiffType = 'added' | 'removed' | 'changed'
+
+export interface XmlDiffItem {
+  type: XmlDiffType
+  path: (string | number)[]
+  tag?: string
+  leftRange?: { from: number; to: number }
+  rightRange?: { from: number; to: number }
+}
+
 export function validateXml(xml: string): XmlValidationError {
   if (!xml || !xml.trim()) {
     return {
@@ -135,4 +154,225 @@ export function formatXml(xml: string, indentStr: string = '  '): string {
   }
 
   return lines.join('\n')
+}
+
+export function parseXmlToAst(xml: string): XmlAstNode {
+  const tokenRegex = /(<!\[CDATA\[[\s\S]*?\]\]>)|(<!--[\s\S]*?-->)|(<\?[\s\S]*?\?>)|(<!DOCTYPE[\s\S]*?>)|(<\/[^>]+>)|(<[^>]+?\/>)|(<[^>]+?>)|([^<]+)/g
+
+  function parseAttributes(tagStr: string): Record<string, string> {
+    const attrs: Record<string, string> = {}
+    const attrRegex = /([a-zA-Z0-9_.:-]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g
+    let m: RegExpExecArray | null
+    while ((m = attrRegex.exec(tagStr)) !== null) {
+      const key = m[1]
+      if (key) {
+        attrs[key] = m[2] !== undefined ? m[2] : (m[3] ?? '')
+      }
+    }
+    return attrs
+  }
+
+  function getTagName(tagStr: string): string {
+    const m = tagStr.match(/<(?:\/)?([a-zA-Z0-9_.:-]+)/)
+    return m && m[1] ? m[1] : ''
+  }
+
+  const roots: XmlAstNode[] = []
+  const stack: XmlAstNode[] = []
+  let match: RegExpExecArray | null
+
+  while ((match = tokenRegex.exec(xml)) !== null) {
+    const text = match[0]
+    const from = match.index
+    const to = from + text.length
+
+    if (match[5]) {
+      // Closing tag </tag>
+      const tagName = getTagName(text)
+      if (stack.length > 0) {
+        for (let i = stack.length - 1; i >= 0; i--) {
+          const stackNode = stack[i]
+          if (stackNode && stackNode.tag === tagName) {
+            stackNode.to = to
+            stack.splice(i)
+            break
+          }
+        }
+      }
+    } else if (match[6]) {
+      // Self-closing tag <tag ... />
+      const tagName = getTagName(text)
+      const node: XmlAstNode = {
+        tag: tagName,
+        attributes: parseAttributes(text),
+        children: [],
+        from,
+        to
+      }
+      if (stack.length > 0) {
+        stack[stack.length - 1]?.children.push(node)
+      } else {
+        roots.push(node)
+      }
+    } else if (match[7]) {
+      // Opening tag <tag ... >
+      const tagName = getTagName(text)
+      const node: XmlAstNode = {
+        tag: tagName,
+        attributes: parseAttributes(text),
+        children: [],
+        from,
+        to
+      }
+      if (stack.length > 0) {
+        stack[stack.length - 1]?.children.push(node)
+      } else {
+        roots.push(node)
+      }
+      stack.push(node)
+    } else if (match[1]) {
+      // CDATA
+      if (stack.length > 0) {
+        const top = stack[stack.length - 1]
+        if (top) top.text = (top.text || '') + text
+      }
+    } else if (match[8]) {
+      // Text
+      const trimmed = text.trim()
+      if (trimmed && stack.length > 0) {
+        const top = stack[stack.length - 1]
+        if (top) top.text = (top.text || '') + trimmed
+      }
+    }
+  }
+
+  return roots.length === 1 && roots[0]
+    ? roots[0]
+    : { tag: '__root__', attributes: {}, children: roots, from: 0, to: xml.length }
+}
+
+export function runXmlDiff(
+  left: XmlAstNode | null | undefined,
+  right: XmlAstNode | null | undefined,
+  path: (string | number)[] = []
+): XmlDiffItem[] {
+  if (!left && !right) return []
+
+  if (left && !right) {
+    return [{
+      type: 'removed',
+      path,
+      tag: left.tag,
+      leftRange: { from: left.from, to: left.to }
+    }]
+  }
+
+  if (!left && right) {
+    return [{
+      type: 'added',
+      path,
+      tag: right.tag,
+      rightRange: { from: right.from, to: right.to }
+    }]
+  }
+
+  if (!left || !right) return []
+
+  const diffs: XmlDiffItem[] = []
+
+  // Check tag mismatch
+  if (left.tag !== right.tag) {
+    return [{
+      type: 'changed',
+      path,
+      tag: left.tag,
+      leftRange: { from: left.from, to: left.to },
+      rightRange: { from: right.from, to: right.to }
+    }]
+  }
+
+  // 1. Compare attributes
+  const leftAttrs = left.attributes || {}
+  const rightAttrs = right.attributes || {}
+  const allAttrKeys = new Set([...Object.keys(leftAttrs), ...Object.keys(rightAttrs)])
+  let attrsDiffer = false
+
+  for (const k of allAttrKeys) {
+    if (leftAttrs[k] !== rightAttrs[k]) {
+      attrsDiffer = true
+      break
+    }
+  }
+
+  if (attrsDiffer) {
+    diffs.push({
+      type: 'changed',
+      path: [...path, '@attributes'],
+      tag: left.tag,
+      leftRange: { from: left.from, to: left.to },
+      rightRange: { from: right.from, to: right.to }
+    })
+  }
+
+  // 2. Compare text if leaf nodes
+  if (left.children.length === 0 && right.children.length === 0) {
+    const lText = (left.text || '').trim()
+    const rText = (right.text || '').trim()
+    if (lText !== rText) {
+      diffs.push({
+        type: 'changed',
+        path: [...path, '#text'],
+        tag: left.tag,
+        leftRange: { from: left.from, to: left.to },
+        rightRange: { from: right.from, to: right.to }
+      })
+    }
+    return diffs
+  }
+
+  // 3. Compare children
+  const lChildren = left.children
+  const rChildren = right.children
+
+  const lCounts: Record<string, number> = {}
+  const lKeys = lChildren.map(c => {
+    lCounts[c.tag] = (lCounts[c.tag] || 0) + 1
+    return `${c.tag}_${(lCounts[c.tag] ?? 1) - 1}`
+  })
+
+  const rCounts: Record<string, number> = {}
+  const rKeys = rChildren.map(c => {
+    rCounts[c.tag] = (rCounts[c.tag] || 0) + 1
+    return `${c.tag}_${(rCounts[c.tag] ?? 1) - 1}`
+  })
+
+  const allChildKeys = new Set([...lKeys, ...rKeys])
+
+  for (const key of allChildKeys) {
+    const lIdx = lKeys.indexOf(key)
+    const rIdx = rKeys.indexOf(key)
+    const lChild = lIdx !== -1 ? lChildren[lIdx] : null
+    const rChild = rIdx !== -1 ? rChildren[rIdx] : null
+    const childPath = [...path, key.replace(/_0$/, '')]
+
+    if (lChild && !rChild) {
+      diffs.push({
+        type: 'removed',
+        path: childPath,
+        tag: lChild.tag,
+        leftRange: { from: lChild.from, to: lChild.to }
+      })
+    } else if (!lChild && rChild) {
+      diffs.push({
+        type: 'added',
+        path: childPath,
+        tag: rChild.tag,
+        rightRange: { from: rChild.from, to: rChild.to }
+      })
+    } else if (lChild && rChild) {
+      diffs.push(...runXmlDiff(lChild, rChild, childPath))
+    }
+  }
+
+  return diffs
 }

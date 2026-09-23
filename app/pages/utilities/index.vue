@@ -34,7 +34,7 @@
         <div class="bg-white border border-slate-100 rounded-[2rem] shadow-xl shadow-slate-100/50 p-6 md:p-8 flex-grow flex flex-col h-full">
           
           <!-- Active Tool Content -->
-          <div v-if="activeTool" class="flex flex-col h-full space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500" :class="{ 'overflow-y-auto pr-1': activeToolId === 'json-diff' }">
+          <div v-if="activeTool" class="flex flex-col h-full space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500" :class="{ 'overflow-y-auto pr-1': activeToolId === 'json-diff' || activeToolId === 'xml-diff' }">
             
             <header class="flex flex-col md:flex-row md:items-start justify-between gap-4">
               <div class="flex-grow">
@@ -43,7 +43,7 @@
               </div>
               
               <!-- Action Button Row -->
-              <div v-if="activeToolId !== 'json-diff' && activeToolId !== 'xml-fmt' && activeToolId !== 'json-fmt'" class="flex items-center gap-3 flex-shrink-0 pt-1">
+              <div v-if="activeToolId !== 'json-diff' && activeToolId !== 'xml-fmt' && activeToolId !== 'json-fmt' && activeToolId !== 'xml-diff'" class="flex items-center gap-3 flex-shrink-0 pt-1">
                 <input
                   type="file"
                   ref="fileInput"
@@ -88,6 +88,11 @@
             <!-- Dedicated JSON Diff Component -->
             <div v-else-if="activeToolId === 'json-diff'" class="flex-grow">
               <ToolsJsonDiff />
+            </div>
+
+            <!-- Dedicated XML Diff Component -->
+            <div v-else-if="activeToolId === 'xml-diff'" class="flex-grow">
+              <ToolsXmlDiff />
             </div>
 
             <!-- Unified Dark Workspace for other tools (b64-enc, b64-dec) -->
@@ -186,6 +191,14 @@ const tools = [
     actionLabel: 'Compare JSON',
     placeholder: '',
     description: 'Compare two JSON documents and highlight their differences.'
+  },
+  { 
+    id: 'xml-diff', 
+    name: 'XML Diff', 
+    icon: '<!>', 
+    actionLabel: 'Compare XML',
+    placeholder: '',
+    description: 'Compare two XML documents and highlight structural differences with syntax-aware folding.'
   }
 ]
 

@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: payments
+    runtime: static
+    staticPublishPath: .output/public
+    routes:
+      - type: redirect
+        source: /what-and-high-and-low-value-payment-systems/
+        destination: /what-are-high-and-low-value-payment-systems/
+      - type: redirect
+        source: /what-and-high-and-low-value-payment-systems
+        destination: /what-are-high-and-low-value-payment-systems/

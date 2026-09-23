@@ -1,7 +1,7 @@
 ---
 title: "camt.056 Explained: Payment Cancellation Requests and Recall Flow"
 date: 2023-04-21
-description: "Master the ISO 20022 camt.056 Payment Cancellation Request message. Learn the interbank recall flow, EPC SCT scheme deadlines, and validated XML structures."
+description: "Master the ISO 20022 camt.056 Payment Cancellation Request message. Learn the interbank recall flow, EPC SCT scheme deadlines, and XML structures."
 categories: 
   - "iso20022"
   - "sepa"
@@ -23,7 +23,7 @@ When evaluating a camt.056 workflow, integration engineers must specify both the
 
 ## Concrete Scheme Example: EPC SEPA Credit Transfer (SCT) Recall
 
-Under the European Payments Council (EPC) [SEPA Credit Transfer (SCT) Rulebook](https://www.europeanpaymentscouncil.eu), the recall procedure governs how participants handle erroneous or fraudulent credit transfers.
+Under the European Payments Council (EPC) [SEPA Credit Transfer Scheme Rulebook](https://www.europeanpaymentscouncil.eu/document-library/rulebooks/sepa-credit-transfer-scheme-rulebook), the recall procedure governs how participants handle erroneous or fraudulent credit transfers.
 
 <figure>
 
@@ -39,35 +39,37 @@ Figure 1: Recall message exchange across Originator, Originator Bank, Beneficiar
 
 In the EPC SCT scheme, camt.056 supports two distinct business processes:
 
-### 1. SCT Recall (Bank-Initiated)
-Initiated directly by the Originator Bank due to technical or operational errors. Permitted reason codes include:
-* `DUPL` (Duplicate sending): Sent twice due to technical glitch.
-* `TECH` (Technical problem): Erroneous transmission or incorrect clearing file.
-* `FRAD` (Fraudulent origin): Suspected unauthorized or fraudulent instruction.
+### 1. SCT Recall (PSP-Initiated, Dataset DS-05)
+Initiated directly by the Originator PSP due to technical or operational errors:
+* `DUPL` (Duplicate sending): Sent more than once due to technical or operational error.
+* `TECH` (Technical problem): Technical error resulting in erroneous transmission.
+* `FRAD` (Fraudulent origin): Fraudulent originated credit transfer.
 
-**Initiation Deadline:** For `DUPL` and `TECH`, the Originator Bank must dispatch the camt.056 within **10 Banking Business Days** following the execution date of the original payment. For `FRAD`, the request can be initiated within **13 months** from the execution date.
+**Initiation Deadlines:** For `DUPL` and `TECH`, the Originator PSP must dispatch the camt.056 within **10 Banking Business Days** following the execution date of the original SCT instruction. For `FRAD`, the request can be initiated within **13 months** from the execution date.
 
-### 2. Request for Recall by the Originator (RFRO, Customer-Initiated)
-Initiated on behalf of the customer when they erroneously entered the wrong IBAN, paid twice, or fell victim to fraud.
+### 2. Request for Recall by the Originator (RFRO, Customer-Initiated, Dataset DS-07)
+Initiated on behalf of the customer when they erroneously entered an incorrect IBAN, sent a duplicate payment, or fell victim to fraud.
 
-**Initiation Deadline:** An RFRO must be submitted within **13 months** following the execution date of the original SCT.
+**Initiation Deadline:** An RFRO must be submitted by the customer within **13 months** following the debit date of the original payment.
 
 ---
 
 ## The Response Lifecycle: camt.056, pacs.004, and camt.029
 
-Under EPC SCT scheme rules, the Beneficiary Bank must investigate the request and provide a definitive answer within a maximum of **15 Banking Business Days** following receipt of the camt.056. Failing to respond within 15 Banking Business Days constitutes a direct breach of the SCT Rulebook.
+Under EPC SCT scheme rules, the Beneficiary PSP must investigate the request and provide a definitive answer within a mandatory maximum of **15 Banking Business Days** following receipt of the camt.056. Failing to respond within 15 Banking Business Days constitutes a direct breach of the SCT Rulebook.
 
-The Beneficiary Bank must respond with one of two mutually exclusive messages:
+The Beneficiary PSP must respond with one of two mutually exclusive messages:
 
 ```
                       +-------------------+
                       |  camt.056 Request |
+                      | (DS-05 or DS-07)  |
                       +-------------------+
                                 |
                +----------------+----------------+
                |                                 |
         Recall Accepted                   Recall Rejected
+        (DS-06 or DS-08)                  (DS-06 or DS-08)
                |                                 |
                v                                 v
       +-----------------+               +-----------------+
@@ -83,9 +85,9 @@ The Beneficiary Bank must respond with one of two mutually exclusive messages:
 
 ---
 
-## Key Structural Elements (ISO 20022 camt.056)
+## Key Structural Elements (ISO 20022 camt.056.001.08)
 
-In the ISO 20022 2019/2020 releases (such as `camt.056.001.08` used in the SEPA 2019 baseline and `camt.056.001.09` in modern implementations), the root element `<FIToFIPmtCxlReq>` is organized into precise structural blocks:
+Under the [SEPA Credit Transfer Scheme Inter-PSP Implementation Guidelines (EPC115-06)](https://www.europeanpaymentscouncil.eu/document-library/implementation-guidelines/sepa-credit-transfer-inter-psp-implementation-1), the applicable message version for payment recall requests is **`camt.056.001.08`**. The root element `<FIToFIPmtCxlReq>` is organized into precise structural blocks:
 
 ### 1. Case Assignment (`<Assgnmt>`)
 Identifies the investigation routing and parties:
@@ -95,10 +97,10 @@ Identifies the investigation routing and parties:
 * `<CreDtTm>`: Timestamp of message generation.
 
 ### 2. Case Identification (`<Case>`) *(Optional)*
-Used to link multiple related messages (e.g., subsequent queries or resolutions) under a shared investigation reference (`<Id>`).
+Used to link multiple related messages under a shared investigation reference (`<Id>`).
 
 ### 3. Underlying Transactions (`<Undrlyg>`)
-Contains the specific payment instructions targeted for recall. Under `<TxInf>` (Payment Transaction):
+Contains the specific payment instructions targeted for recall. Under `<TxInf>` (`PaymentTransaction106`):
 * `<CxlId>`: Unique cancellation identifier assigned to this specific cancellation instruction.
 * `<OrgnlGrpInf>`: Original clearing batch identifiers (`<OrgnlMsgId>`, `<OrgnlMsgNmId>pacs.008.001.08</OrgnlMsgNmId>`).
 * `<OrgnlEndToEndId>`: The original end-to-end reference of the transaction.
@@ -111,15 +113,15 @@ Contains the specific payment instructions targeted for recall. Under `<TxInf>` 
 
 ---
 
-## Validated XML Example
+## Synthetic XML Example (camt.056.001.08)
 
-Below is a synthetic, complete `camt.056.001.09` XML document requesting the recall of a settled credit transfer due to duplicate execution (`DUPL`).
+Below is a synthetic `camt.056.001.08` XML document requesting the recall of a settled credit transfer due to duplicate execution (`DUPL`), structured according to EPC115-06 Inter-PSP Implementation Guidelines.
 
-> **Validation Note:** This XML instance has been tested and validated against the official ISO 20022 XML Schema Definition (`camt.056.001.09.xsd`, target namespace `urn:iso:std:iso:20022:tech:xsd:camt.056.001.09`) using `xmllint` and Python `lxml`.
+> **Verification Note:** This example specifies the target namespace `urn:iso:std:iso:20022:tech:xsd:camt.056.001.08` used by the EPC SCT scheme. Because standalone XSD packages for this specific version could not be retrieved from primary sources due to anti-bot restrictions on download archives, this snippet is provided as an illustrative structural reference rather than an independently verified XSD-validated document.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.056.001.09">
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.056.001.08">
     <FIToFIPmtCxlReq>
         <Assgnmt>
             <Id>ASSIGN-2026-0922-001</Id>
@@ -162,7 +164,7 @@ Below is a synthetic, complete `camt.056.001.09` XML document requesting the rec
 </Document>
 ```
 
-You can format and test XML payloads using our browser-based [XML Formatter Toolkit](/utilities/).
+You can format and inspect XML payloads for indentation and syntax structure using our browser-based [XML Formatter Toolkit](/utilities/).
 
 ---
 
@@ -171,12 +173,12 @@ You can format and test XML payloads using our browser-based [XML Formatter Tool
 When building automated recall handling engines, do not rely solely on XSD validation:
 
 * **XSD Schema Validation:** Verifies structural and typing rules—for example, that `<OrgnlUETR>` conforms to the UUIDv4 pattern, that `<Assgnmt>` contains both `<Assgnr>` and `<Assgne>`, and that elements appear in their schema-defined sequence.
-* **Scheme Business Validation:** Checks scheme eligibility—for example, whether the original [`pacs.008`](/pacs-008-message/) transaction actually settled, whether the recall was initiated within the 10-business-day or 13-month window, and whether the beneficiary bank is registered as reachable under the scheme directory.
+* **Scheme Business Validation:** Checks scheme eligibility—for example, whether the original [`pacs.008`](/pacs-008-message/) transaction actually settled, whether the recall was initiated within the 10 Banking Business Days window (or 13 months for fraud), and whether the beneficiary bank is registered as reachable under the scheme directory.
 
 ---
 
 ## Authoritative References
 
-* [ISO 20022 Payments Exceptions and Investigations Catalogue](https://www.iso20022.org/iso-20022-message-definitions) — Official message definitions, MDRs, and schemas for `camt.056`.
-* [European Payments Council (EPC) SEPA Credit Transfer Rulebook](https://www.europeanpaymentscouncil.eu) — Detailed recall workflow specifications, reason codes, and operational deadlines for Dataset DS-05 and DS-06.
-* [SWIFT CBPR+ User Guidelines](https://www.swift.com/standards/iso-20022) — Cross-border usage guidelines for payment cancellation requests.
+* [ISO 20022 Payments Exceptions and Investigations Catalogue](https://www.iso20022.org/iso-20022-message-definitions) — Official message definitions and XML specifications for `camt.056`.
+* [European Payments Council: SEPA Credit Transfer Inter-PSP Implementation Guidelines (EPC115-06)](https://www.europeanpaymentscouncil.eu/document-library/implementation-guidelines/sepa-credit-transfer-inter-psp-implementation-1) — Technical specifications for Dataset DS-05.
+* [European Payments Council: SEPA Credit Transfer Scheme Rulebook](https://www.europeanpaymentscouncil.eu/document-library/rulebooks/sepa-credit-transfer-scheme-rulebook) — Operational rules and timeframes governing Recall and RFRO procedures.
