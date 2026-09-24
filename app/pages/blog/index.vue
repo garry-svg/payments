@@ -1,6 +1,25 @@
 <template>
   <div class="max-w-6xl mx-auto px-6 pt-8 pb-16 lg:pt-12 lg:pb-24 bg-white min-h-screen">
-    <div v-if="filteredPosts?.length">
+    <!-- 1. Loading State -->
+    <div v-if="status === 'pending'" class="flex flex-col items-center justify-center py-24 space-y-4">
+      <div class="w-8 h-8 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin"></div>
+      <p class="text-slate-500 font-mono text-sm">Loading engineering log...</p>
+    </div>
+
+    <!-- 2. Error State -->
+    <div v-else-if="status === 'error'" class="text-center py-24 bg-rose-50 rounded-3xl border border-rose-200 p-8 max-w-xl mx-auto">
+      <h3 class="text-lg font-bold text-rose-900 mb-2">Failed to load articles</h3>
+      <p class="text-rose-600 text-sm mb-6">{{ error?.message || 'An unexpected error occurred while fetching log entries.' }}</p>
+      <button 
+        @click="() => refresh()" 
+        class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold font-mono uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm"
+      >
+        Try Again
+      </button>
+    </div>
+
+    <!-- 3. Successful Articles Listing -->
+    <div v-else-if="filteredPosts?.length">
       <!-- Featured Hero Post (Latest) -->
       <NuxtLink 
         v-if="featuredPost" 
@@ -13,7 +32,7 @@
               <span class="px-4 py-1.5 bg-violet-100 text-violet-700 text-xs font-bold uppercase tracking-widest font-mono rounded-full">
                 {{ featuredPost.categories?.[0] || 'Technical' }}
               </span>
-              <span class="text-sm font-mono text-slate-400 uppercase tracking-widest">
+              <span v-if="featuredPost.date" class="text-sm font-mono text-slate-400 uppercase tracking-widest">
                 {{ new Date(featuredPost.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }}
               </span>
             </div>
@@ -23,7 +42,7 @@
             </h2>
             
             <p class="text-lg md:text-xl text-slate-500 leading-relaxed mb-8">
-              {{ featuredPost.description || stripMarkdown(featuredPost.body?.children?.[0]?.children?.[0]?.value || '') }}
+              {{ featuredPost.description || stripMarkdown((featuredPost.body as any)?.children?.[0]?.children?.[0]?.value || '') }}
             </p>
 
             <div class="inline-flex items-center gap-2 text-sm font-bold text-violet-600 uppercase tracking-widest">
@@ -46,7 +65,7 @@
               {{ post.categories?.[0] || 'Compliance' }}
             </span>
             <span class="w-1 h-1 rounded-full bg-slate-200"></span>
-            <span class="text-[10px] font-mono text-slate-400 uppercase tracking-widest">
+            <span v-if="post.date" class="text-[10px] font-mono text-slate-400 uppercase tracking-widest">
               {{ new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }}
             </span>
           </div>
@@ -56,7 +75,7 @@
           </h3>
           
           <p class="text-slate-500 leading-relaxed line-clamp-3 mb-6 flex-grow">
-            {{ post.description || stripMarkdown(post.body?.children?.[0]?.children?.[0]?.value || '') }}
+            {{ post.description || stripMarkdown((post.body as any)?.children?.[0]?.children?.[0]?.value || '') }}
           </p>
 
           <div class="mt-auto text-sm font-bold text-violet-600 flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
@@ -66,6 +85,7 @@
       </div>
     </div>
     
+    <!-- 4. Genuinely Empty State -->
     <div v-else class="text-center py-24 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
       <p class="text-slate-400 italic">No entries found in the log yet.</p>
     </div>
@@ -74,6 +94,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { extractSlug } from '~/utils/blog'
 
 useSeoMeta({
   title: 'Engineering Log - Dave Garry',
@@ -84,7 +105,7 @@ useSeoMeta({
 })
 
 // Fetch all blog collection data ordered by date
-const { data: posts } = await useAsyncData('blog-posts', () => 
+const { data: posts, status, error, refresh } = await useAsyncData('blog-posts', () => 
   queryCollection('blog')
     .order('date', 'DESC')
     .all()
@@ -92,11 +113,12 @@ const { data: posts } = await useAsyncData('blog-posts', () =>
 
 // Filter logic handling Deep Paths and Drafts
 const filteredPosts = computed(() => {
-  if (!posts.value) return []
+  if (!posts.value || !Array.isArray(posts.value)) return []
   return posts.value
     .filter(post => {
+      if (!post || !post.path) return false
       const isDraft = post.path.includes('_drafts')
-      const isOutputPost = post.path.startsWith('/blog/output/posts')
+      const isOutputPost = post.path.includes('/posts/') || post.path.startsWith('/blog/output/posts')
       return !isDraft && isOutputPost
     })
     .map(post => ({

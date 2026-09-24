@@ -7,16 +7,17 @@
  * @returns The extracted slug
  */
 export const extractSlug = (path: string): string => {
+  if (!path) return ''
   // Remove trailing slash if present
   const normalizedPath = path.endsWith('/') ? path.slice(0, -1) : path
   
   // Get the last segment of the path
   const segments = normalizedPath.split('/')
-  const lastSegment = segments[segments.length - 1]
+  const lastSegment = segments[segments.length - 1] || ''
   
   // Match YYYY-MM-DD-slug
   const datePattern = /^\d{4}-\d{2}-\d{2}-(.+)$/
   const match = lastSegment.match(datePattern)
   
-  return match ? match[1] : lastSegment
+  return match?.[1] || lastSegment || ''
 }

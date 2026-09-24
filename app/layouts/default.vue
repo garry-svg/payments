@@ -10,7 +10,7 @@
           <span class="font-bold tracking-tight text-slate-900">davegarry.com</span>
         </NuxtLink>
 
-        <div class="flex items-center gap-12">
+        <div class="flex items-center gap-6 sm:gap-12">
           <NuxtLink 
             v-for="link in navLinks" 
             :key="link.path" 

@@ -13,9 +13,9 @@
           <button 
             v-for="tool in tools" 
             :key="tool.id"
-            @click="activeToolId = tool.id"
+            @click="selectTool(tool.id)"
             :class="[
-              'flex items-center gap-3 px-4 py-3 rounded-xl transition-all whitespace-nowrap lg:whitespace-normal group',
+              'flex items-center gap-3 px-4 py-3 rounded-xl transition-all whitespace-nowrap lg:whitespace-normal group cursor-pointer',
               activeToolId === tool.id 
                 ? 'bg-violet-50 text-indigo-600 border border-indigo-200' 
                 : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
@@ -206,12 +206,21 @@ const tools = [
 const activeToolId = ref('xml-fmt')
 const fileInput = ref<HTMLInputElement | null>(null)
 
-onMounted(() => {
-  const toolFromQuery = route.query.tool as string
-  if (toolFromQuery && tools.some(t => t.id === toolFromQuery)) {
-    activeToolId.value = toolFromQuery
-  }
-})
+// Support deep-linking via query parameter ?tool=... both on initial load and navigation
+watch(
+  () => route.query.tool,
+  (toolQuery) => {
+    if (toolQuery && typeof toolQuery === 'string' && tools.some(t => t.id === toolQuery)) {
+      activeToolId.value = toolQuery
+    }
+  },
+  { immediate: true }
+)
+
+function selectTool(id: string) {
+  activeToolId.value = id
+  navigateTo({ path: '/utilities/', query: { tool: id } }, { replace: true })
+}
 
 const activeTool = computed(() => tools.find(t => t.id === activeToolId.value))
 
@@ -260,7 +269,7 @@ async function copyResult() {
   setTimeout(() => { isCopied.value = false }, 2000)
 }
 
-// Unified Action Handler for Base64 Tools
+// Unified Action Handler for Base64 Tools (Client-Side UTF-8 Safe)
 async function processToolAction() {
   if (!buffer.value.trim()) return
   
@@ -270,16 +279,19 @@ async function processToolAction() {
   try {
     if (activeToolId.value === 'b64-enc' || activeToolId.value === 'b64-dec') {
       const mode = activeToolId.value === 'b64-enc' ? 'encode' : 'decode'
-      const params = new URLSearchParams()
-      params.append('string', buffer.value)
-      params.append('mode', mode)
-      
-      const data = await $fetch<string>(`${apiBase}/api/v1/convert/base64`, {
-        method: 'POST',
-        body: params,
-        headers: { 'Accept': 'text/plain' }
-      })
-      buffer.value = data
+      if (mode === 'encode') {
+        try {
+          buffer.value = btoa(unescape(encodeURIComponent(buffer.value)))
+        } catch (e: any) {
+          currentError.value = 'Failed to encode text to Base64: ' + (e.message || String(e))
+        }
+      } else {
+        try {
+          buffer.value = decodeURIComponent(escape(atob(buffer.value.trim())))
+        } catch (e: any) {
+          currentError.value = 'Invalid Base64 string: ' + (e.message || String(e))
+        }
+      }
     }
   } catch (err: any) {
     currentError.value = err.data?.message || err.message || 'Processing failed. Please check your input format.'
