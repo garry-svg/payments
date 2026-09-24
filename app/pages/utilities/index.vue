@@ -5,7 +5,6 @@
       <aside class="w-full lg:w-72 flex flex-col gap-2 flex-shrink-0 pt-2">
         <div class="mb-6 hidden lg:block px-4">
           <h1 class="text-xl font-bold text-slate-900 tracking-tight">System_Utilities</h1>
-          <p class="text-xs text-slate-400 font-mono mt-1 uppercase tracking-widest">v4.1.0_PRO</p>
         </div>
 
         <!-- Mobile Horizontal Tabs / Desktop Vertical Sidebar -->

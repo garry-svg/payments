@@ -184,11 +184,11 @@
       </div>
     </section>
 
-    <!-- Engineering Log Archive Section -->
+    <!-- More Payment Guides Section -->
     <section class="space-y-8">
       <div class="flex items-end justify-between border-b border-slate-100 pb-4">
         <div>
-          <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Recent Articles</h2>
+          <h2 class="text-2xl font-bold text-slate-900 tracking-tight">More payment guides</h2>
           <p class="text-slate-500 text-sm mt-1">Deep dives into clearing, settlement, PACS, PAIN, and CAMT messaging standards.</p>
         </div>
         <NuxtLink to="/blog/" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors uppercase tracking-widest flex items-center gap-1 group font-mono shrink-0">
@@ -231,6 +231,33 @@
       </div>
       <div v-else class="text-center text-slate-400 py-16 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
         <p class="italic">No articles currently in the queue.</p>
+      </div>
+    </section>
+
+    <!-- Contact Invitation Section -->
+    <section class="border-t border-slate-100 pt-16">
+      <div class="p-8 md:p-12 bg-slate-50 border border-slate-100 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-8">
+        <div class="max-w-2xl space-y-3">
+          <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Working on payment messaging or AI agents?</h2>
+          <p class="text-slate-600 text-sm md:text-base leading-relaxed">
+            I’m interested in the practical problems engineers encounter when building, testing and debugging payment systems. Connect with me to compare approaches, share feedback or discuss ideas.
+          </p>
+        </div>
+        <div class="flex-shrink-0">
+          <a 
+            href="https://www.linkedin.com/in/dgarry/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-6 py-3.5 bg-indigo-950 hover:bg-indigo-900 text-white text-sm font-bold rounded-xl transition-all shadow-md shadow-indigo-100"
+          >
+            Connect with me on LinkedIn
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
       </div>
     </section>
   </div>
