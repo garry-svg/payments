@@ -5,13 +5,13 @@
       <div class="flex items-center gap-3">
         <button 
           @click="compareJsonDiff"
-          class="px-6 py-2.5 bg-indigo-950 hover:bg-indigo-900 text-white text-sm font-bold rounded-xl transition-all hover:shadow-lg shadow-indigo-100 flex items-center gap-2 cursor-pointer"
+          class="px-6 py-2.5 bg-[#7C00FF] hover:bg-[#6500DB] text-white text-sm font-bold rounded-xl transition-all shadow-md shadow-purple-600/20 hover:shadow-purple-600/30 flex items-center gap-2 cursor-pointer"
         >
           Compare JSON
         </button>
         <button 
           @click="clearAll"
-          class="px-5 py-2.5 text-sm font-bold text-slate-500 hover:text-slate-900 border border-slate-200 rounded-xl transition-all cursor-pointer"
+          class="px-5 py-2.5 text-sm font-bold text-[#8590AA] hover:text-[#16032F] border border-[#E8E3EF] hover:border-[#DDD6E8] hover:bg-[#F8F4FF] rounded-xl transition-all cursor-pointer"
         >
           Clear All
         </button>
@@ -66,16 +66,16 @@
       <!-- Successful Diff with Differences Found -->
       <div 
         v-else-if="diffResult && diffResult.length > 0" 
-        class="flex items-center gap-2.5 px-4 py-3 bg-indigo-50 border border-indigo-200/70 rounded-2xl text-indigo-950 animate-in fade-in duration-200 shadow-sm"
+        class="flex items-center gap-2.5 px-4 py-3 bg-[#F3EDFF] border border-[#E8E3EF] rounded-2xl text-[#16032F] animate-in fade-in duration-200 shadow-sm"
       >
-        <div class="p-1 bg-indigo-100 rounded-lg text-indigo-700 shrink-0">
+        <div class="p-1 bg-[#E0CBFF] rounded-lg text-[#7C00FF] shrink-0">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/>
             <line x1="12" y1="16" x2="12" y2="12"/>
             <line x1="12" y1="8" x2="12.01" y2="8"/>
           </svg>
         </div>
-        <span class="text-sm font-bold text-indigo-950 font-mono tracking-wide">
+        <span class="text-sm font-bold text-[#16032F] font-mono tracking-wide">
           {{ diffResult.length }} {{ diffResult.length === 1 ? 'difference' : 'differences' }} found
         </span>
       </div>
@@ -87,7 +87,7 @@
       <div class="flex flex-col gap-2">
         <div class="flex items-center justify-between px-2">
           <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">Left JSON</span>
+            <span class="text-xs font-bold text-[#8590AA] uppercase tracking-wider font-mono">Left JSON</span>
             <span 
               v-if="leftError" 
               class="text-[11px] font-bold text-rose-600 font-mono bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200 animate-in fade-in"
@@ -105,14 +105,14 @@
             />
             <button 
               @click="triggerLeftUpload"
-              class="text-xs font-semibold text-slate-400 hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer"
+              class="text-xs font-semibold text-[#8590AA] hover:text-[#7C00FF] flex items-center gap-1 transition-colors cursor-pointer"
             >
               Upload
             </button>
-            <span class="text-slate-200 text-xs font-semibold">|</span>
+            <span class="text-[#DDD6E8] text-xs font-semibold">|</span>
             <button 
               @click="clearLeft"
-              class="text-xs font-semibold text-slate-400 hover:text-red-600 transition-colors cursor-pointer"
+              class="text-xs font-semibold text-[#8590AA] hover:text-rose-600 transition-colors cursor-pointer"
             >
               Clear
             </button>
@@ -120,7 +120,7 @@
         </div>
         
         <!-- Interactive Workspace -->
-        <div class="h-[500px] lg:h-[650px] bg-slate-950 rounded-2xl relative border border-slate-900 overflow-hidden shadow-inner shadow-black/20">
+        <div class="h-[500px] lg:h-[650px] bg-[#120024] rounded-2xl relative border border-[#302E40] overflow-hidden shadow-inner shadow-black/30">
           <div ref="leftEditorContainer" class="h-full w-full"></div>
         </div>
       </div>
@@ -129,7 +129,7 @@
       <div class="flex flex-col gap-2">
         <div class="flex items-center justify-between px-2">
           <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">Right JSON</span>
+            <span class="text-xs font-bold text-[#8590AA] uppercase tracking-wider font-mono">Right JSON</span>
             <span 
               v-if="rightError" 
               class="text-[11px] font-bold text-rose-600 font-mono bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200 animate-in fade-in"
@@ -147,14 +147,14 @@
             />
             <button 
               @click="triggerRightUpload"
-              class="text-xs font-semibold text-slate-400 hover:text-indigo-600 flex items-center gap-1 transition-colors cursor-pointer"
+              class="text-xs font-semibold text-[#8590AA] hover:text-[#7C00FF] flex items-center gap-1 transition-colors cursor-pointer"
             >
               Upload
             </button>
-            <span class="text-slate-200 text-xs font-semibold">|</span>
+            <span class="text-[#DDD6E8] text-xs font-semibold">|</span>
             <button 
               @click="clearRight"
-              class="text-xs font-semibold text-slate-400 hover:text-red-600 transition-colors cursor-pointer"
+              class="text-xs font-semibold text-[#8590AA] hover:text-rose-600 transition-colors cursor-pointer"
             >
               Clear
             </button>
@@ -162,7 +162,7 @@
         </div>
         
         <!-- Interactive Workspace -->
-        <div class="h-[500px] lg:h-[650px] bg-slate-950 rounded-2xl relative border border-slate-900 overflow-hidden shadow-inner shadow-black/20">
+        <div class="h-[500px] lg:h-[650px] bg-[#120024] rounded-2xl relative border border-[#302E40] overflow-hidden shadow-inner shadow-black/30">
           <div ref="rightEditorContainer" class="h-full w-full"></div>
         </div>
       </div>
@@ -251,24 +251,24 @@ onMounted(async () => {
 
   const darkTheme = EditorView.theme({
     "&": {
-      color: "#cbd5e1", // slate-300
-      backgroundColor: "#020617" // slate-950
+      color: "#F8F4FF",
+      backgroundColor: "#120024"
     },
     ".cm-content": {
-      caretColor: "#38bdf8",
+      caretColor: "#8500FF",
       fontFamily: "'JetBrains Mono', monospace",
       fontSize: "14px"
     },
     ".cm-cursor, .cm-dropCursor": {
-      borderLeftColor: "#38bdf8"
+      borderLeftColor: "#8500FF"
     },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection": {
-      backgroundColor: "rgba(56, 189, 248, 0.2)"
+      backgroundColor: "rgba(124, 0, 255, 0.25)"
     },
     ".cm-gutters": {
-      backgroundColor: "#020617",
-      color: "#475569",
-      borderRight: "1px solid #1e293b",
+      backgroundColor: "#120024",
+      color: "#8590AA",
+      borderRight: "1px solid #302E40",
       borderLeft: "none"
     }
   }, { dark: true })
@@ -805,15 +805,15 @@ function compareJsonDiff() {
   height: 8px;
 }
 :deep(.cm-scroller)::-webkit-scrollbar-track {
-  background: #020617;
+  background: #120024;
 }
 :deep(.cm-scroller)::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #302E40;
   border-radius: 10px;
-  border: 2px solid #020617;
+  border: 2px solid #120024;
 }
 :deep(.cm-scroller)::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #424055;
 }
 
 /* Subtle, Native Editor-Line Highlights */

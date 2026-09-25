@@ -23,7 +23,7 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex items-center gap-3 flex-shrink-0">
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
         <input
           type="file"
           ref="fileInput"
@@ -33,13 +33,13 @@
         />
         <button 
           @click="clearBuffer"
-          class="px-5 py-2 text-sm font-bold text-slate-400 hover:text-slate-900 border border-slate-200 rounded-xl transition-all cursor-pointer"
+          class="px-5 py-2 text-sm font-bold text-[#8590AA] hover:text-[#16032F] border border-[#E8E3EF] hover:border-[#DDD6E8] hover:bg-[#F8F4FF] rounded-xl transition-all cursor-pointer"
         >
           Clear_Buffer
         </button>
         <button 
           @click="triggerFileUpload"
-          class="px-5 py-2 text-sm font-bold text-slate-400 hover:text-slate-900 border border-slate-200 rounded-xl transition-all flex items-center gap-2 cursor-pointer"
+          class="px-5 py-2 text-sm font-bold text-[#8590AA] hover:text-[#16032F] border border-[#E8E3EF] hover:border-[#DDD6E8] hover:bg-[#F8F4FF] rounded-xl transition-all flex items-center gap-2 cursor-pointer"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -50,7 +50,7 @@
         </button>
         <button 
           @click="formatXmlDocument"
-          class="px-6 py-2 bg-indigo-950 hover:bg-indigo-900 text-white text-sm font-bold rounded-xl transition-all hover:shadow-lg shadow-indigo-100 flex items-center gap-2 cursor-pointer"
+          class="px-6 py-2 bg-[#7C00FF] hover:bg-[#6500DB] text-white text-sm font-bold rounded-xl transition-all shadow-md shadow-purple-600/20 hover:shadow-purple-600/30 flex items-center gap-2 cursor-pointer"
         >
           Format XML
         </button>
@@ -58,7 +58,7 @@
     </div>
 
     <!-- Unified Dark Workspace with CodeMirror 6 -->
-    <div class="flex-grow flex flex-col relative min-h-[500px] lg:min-h-[650px] bg-slate-950 rounded-[1.5rem] overflow-hidden border border-slate-900 shadow-inner shadow-black/20">
+    <div class="flex-grow flex flex-col relative min-h-[500px] lg:min-h-[650px] bg-[#120024] rounded-[1.5rem] overflow-hidden border border-[#302E40] shadow-inner shadow-black/30">
       <!-- Floating Copy Button in Workspace -->
       <div class="absolute top-4 right-4 z-20 flex gap-2">
         <button 
@@ -139,33 +139,33 @@ onMounted(async () => {
 
   const darkTheme = EditorView.theme({
     "&": {
-      color: "#cbd5e1", // slate-300
-      backgroundColor: "#020617" // slate-950
+      color: "#F8F4FF",
+      backgroundColor: "#120024"
     },
     ".cm-content": {
-      caretColor: "#38bdf8",
+      caretColor: "#8500FF",
       fontFamily: "'JetBrains Mono', monospace",
       fontSize: "14px",
       padding: "20px 24px"
     },
     ".cm-cursor, .cm-dropCursor": {
-      borderLeftColor: "#38bdf8"
+      borderLeftColor: "#8500FF"
     },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection": {
-      backgroundColor: "rgba(56, 189, 248, 0.2)"
+      backgroundColor: "rgba(124, 0, 255, 0.25)"
     },
     ".cm-gutters": {
-      backgroundColor: "#020617",
-      color: "#475569",
-      borderRight: "1px solid #1e293b",
+      backgroundColor: "#120024",
+      color: "#8590AA",
+      borderRight: "1px solid #302E40",
       borderLeft: "none"
     },
     ".cm-activeLine": {
-      backgroundColor: "rgba(255, 255, 255, 0.02)"
+      backgroundColor: "rgba(124, 0, 255, 0.05)"
     },
     ".cm-activeLineGutter": {
-      backgroundColor: "rgba(255, 255, 255, 0.04)",
-      color: "#94a3b8"
+      backgroundColor: "rgba(124, 0, 255, 0.08)",
+      color: "#DDD6E8"
     }
   }, { dark: true })
 
@@ -323,15 +323,15 @@ async function copyResult() {
   height: 8px;
 }
 :deep(.cm-scroller)::-webkit-scrollbar-track {
-  background: #020617;
+  background: #120024;
 }
 :deep(.cm-scroller)::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #302E40;
   border-radius: 10px;
-  border: 2px solid #020617;
+  border: 2px solid #120024;
 }
 :deep(.cm-scroller)::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #424055;
 }
 
 /* CodeMirror Fold Gutter Styling in Dark Theme */
@@ -340,20 +340,20 @@ async function copyResult() {
   cursor: pointer;
 }
 :deep(.cm-foldGutter span) {
-  color: #64748b;
+  color: #8590AA;
   font-size: 14px;
   line-height: 1;
   transition: color 0.15s ease;
 }
 :deep(.cm-foldGutter span:hover) {
-  color: #38bdf8;
+  color: #8500FF;
 }
 
 /* Fold Placeholder Styling (Native CodeMirror …) */
 :deep(.cm-foldPlaceholder) {
-  background-color: #1e293b;
-  border: 1px solid #334155;
-  color: #94a3b8;
+  background-color: #302E40;
+  border: 1px solid #424055;
+  color: #DDD6E8;
   border-radius: 4px;
   padding: 0 4px;
   margin: 0 2px;

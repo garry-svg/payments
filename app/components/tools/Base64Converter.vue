@@ -30,12 +30,12 @@ async function handleConvert() {
 
 <template>
   <div class="space-y-4">
-    <div class="flex items-center justify-between p-1 bg-slate-100 dark:bg-slate-800 rounded-lg">
+    <div class="flex items-center justify-between p-1 bg-[#F8F4FF] border border-[#E8E3EF] rounded-xl">
       <button
         @click="mode = 'encode'"
         :class="[
-          'flex-1 py-2 text-sm font-medium rounded-md transition-all',
-          mode === 'encode' ? 'bg-white dark:bg-slate-700 shadow-sm text-blue-600 dark:text-blue-400' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400'
+          'flex-1 py-2 text-sm font-medium rounded-lg transition-all',
+          mode === 'encode' ? 'bg-white shadow-sm text-[#7C00FF] font-bold' : 'text-[#505A75] hover:text-[#16032F]'
         ]"
       >
         Encode
@@ -43,8 +43,8 @@ async function handleConvert() {
       <button
         @click="mode = 'decode'"
         :class="[
-          'flex-1 py-2 text-sm font-medium rounded-md transition-all',
-          mode === 'decode' ? 'bg-white dark:bg-slate-700 shadow-sm text-blue-600 dark:text-blue-400' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400'
+          'flex-1 py-2 text-sm font-medium rounded-lg transition-all',
+          mode === 'decode' ? 'bg-white shadow-sm text-[#7C00FF] font-bold' : 'text-[#505A75] hover:text-[#16032F]'
         ]"
       >
         Decode
@@ -52,35 +52,35 @@ async function handleConvert() {
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+      <label class="block text-sm font-medium text-[#16032F] mb-1">
         Input {{ mode === 'encode' ? 'Text' : 'Base64' }}
       </label>
       <textarea
         v-model="input"
         :placeholder="mode === 'encode' ? 'Enter text to encode...' : 'Enter base64 to decode...'"
-        class="w-full h-40 p-3 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+        class="w-full h-40 p-3 bg-[#F8F4FF] border border-[#E8E3EF] rounded-xl font-mono text-sm focus:ring-2 focus:ring-[#7C00FF] outline-none text-[#16032F]"
       ></textarea>
     </div>
 
     <button
       @click="handleConvert"
       :disabled="loading || !input.trim()"
-      class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold rounded-lg shadow transition-colors flex items-center justify-center gap-2"
+      class="w-full py-2.5 px-4 bg-[#7C00FF] hover:bg-[#6500DB] disabled:bg-[#A459FF]/50 text-white font-semibold rounded-xl shadow-md shadow-purple-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
     >
       <span v-if="loading" class="animate-spin border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
       {{ loading ? 'Converting...' : mode === 'encode' ? 'Encode to Base64' : 'Decode from Base64' }}
     </button>
 
-    <div v-if="error" class="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm">
+    <div v-if="error" class="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-600 text-sm">
       {{ error }}
     </div>
 
     <div v-if="output">
-      <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Result</label>
+      <label class="block text-sm font-medium text-[#16032F] mb-1">Result</label>
       <textarea
         v-model="output"
         readonly
-        class="w-full h-40 p-3 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg font-mono text-sm outline-none"
+        class="w-full h-40 p-3 bg-[#F8F4FF] border border-[#E8E3EF] rounded-xl font-mono text-sm outline-none text-[#16032F]"
       ></textarea>
     </div>
   </div>
