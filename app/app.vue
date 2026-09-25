@@ -45,6 +45,7 @@ useHead({
   --color-header-bg: #302e40;
   --color-header-text: #c9c3d5;
   --color-header-text-hover: #ffffff;
+  --color-header-text-active: #c4a1ff;
   --color-header-border: rgba(255, 255, 255, 0.08);
 }
 

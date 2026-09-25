@@ -23,6 +23,7 @@ export default <Partial<Config>>{
           'border-subtle': '#DDD6E8', // Slightly deeper lavender border
           'header-bg': '#302E40',     // Dark charcoal-purple header background
           'header-text': '#C9C3D5',   // Muted lavender header link text
+          'header-text-active': '#C4A1FF', // Light lavender active header link text
           'header-border': 'rgba(255, 255, 255, 0.08)', // Subtle header bottom border
         },
         // Tuned slate scale to blend seamlessly with the navy/lavender palette

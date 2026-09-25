@@ -15,11 +15,11 @@
             v-for="link in navLinks" 
             :key="link.path" 
             :to="link.path"
-            class="text-sm font-medium text-[#C9C3D5] hover:text-white transition-colors relative group py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8500FF] rounded-md px-1"
-            active-class="!text-[#A900FF] font-semibold"
+            class="header-nav-link text-sm font-medium text-[#C9C3D5] hover:text-white transition-colors relative group py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8500FF] rounded-md px-1"
+            exact-active-class="!text-[#C4A1FF] font-semibold"
           >
             {{ link.name }}
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8500FF] transition-all duration-300 group-hover:w-full"></span>
+            <span class="absolute bottom-0 left-0 h-0.5 bg-[#8500FF] transition-all duration-300 w-0 group-hover:w-full group-[.router-link-exact-active]:w-full group-[.router-link-active]:w-full"></span>
           </NuxtLink>
         </div>
       </nav>
@@ -66,11 +66,24 @@
 <script setup>
 const navLinks = [
   { name: 'Index', path: '/' },
-  { name: 'Blog', path: '/blog' },
-  { name: 'Utilities', path: '/utilities' }
+  { name: 'Blog', path: '/blog/' },
+  { name: 'Utilities', path: '/utilities/' }
 ]
 
 const socials = [
   { name: 'LinkedIn', url: 'https://www.linkedin.com/in/dgarry/' }
 ]
 </script>
+
+<style scoped>
+:deep(.header-nav-link.router-link-exact-active),
+:deep(.header-nav-link[href^="/blog"].router-link-active),
+:deep(.header-nav-link[href^="/utilities"].router-link-active) {
+  color: var(--color-header-text-active, #C4A1FF) !important;
+}
+:deep(.header-nav-link.router-link-exact-active:hover),
+:deep(.header-nav-link[href^="/blog"].router-link-active:hover),
+:deep(.header-nav-link[href^="/utilities"].router-link-active:hover) {
+  color: var(--color-header-text-hover, #FFFFFF) !important;
+}
+</style>
